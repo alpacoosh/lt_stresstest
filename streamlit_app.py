@@ -100,7 +100,7 @@ if st.button("📥 이수율 조회하기"):
                 st.markdown("""
                 <div style="background-color:#f7f7f9; padding:1.2rem; border-radius:10px;">
                     <h5 style="margin-bottom:0.3rem;">☑️ <b>사전진단 (2차시 / 120분)</b></h5>
-                    <p style="font-size:1.2rem; font-weight:600;">{}분</p>
+                    <p style="font-size:1.5rem; font-weight:600;">{}분</p>
                 </div>
                 """.format(user["사전진단"]), unsafe_allow_html=True)
 
@@ -108,7 +108,7 @@ if st.button("📥 이수율 조회하기"):
                 st.markdown("""
                 <div style="background-color:#f7f7f9; padding:1.2rem; border-radius:10px;">
                     <h5 style="margin-bottom:0.3rem;">☑️ <b>사전워크숍 (3차시 / 180분)</b></h5>
-                    <p style="font-size:1.2rem; font-weight:600;">{}분</p>
+                    <p style="font-size:1.5rem; font-weight:600;">{}분</p>
                 </div>
                 """.format(user["사전워크샵"]), unsafe_allow_html=True)
 
@@ -117,7 +117,7 @@ if st.button("📥 이수율 조회하기"):
             st.markdown(f"""
                             <div style="background-color:#f7f7f9; padding:1.2rem; border-radius:10px; text-align:center;">
                                 <h5 style="margin-bottom:0.3rem;">☑️ <b>원격연수 (9과정 16차시 / 960분)</b></h5>
-                                <p style="font-size:1.2rem; font-weight:600;">{user["원격연수"]}분</p>
+                                <p style="font-size:1.5rem; font-weight:600;">{user["원격연수"]}분</p>
                                 <table style="margin: 0 auto; border-collapse: collapse; font-size: 0.95rem;">
                                     <tr>
                                         <th style="padding:6px 10px; border:1px solid #ddd;">1~2과정</th>
@@ -148,7 +148,7 @@ if st.button("📥 이수율 조회하기"):
                 st.markdown("""
                 <div style="background-color:#f7f7f9; padding:1.2rem; border-radius:10px;">
                     <h5 style="margin-bottom:0.3rem;">☑️ <b>집합연수 (14차시 / 840분)</b></h5>
-                    <p style="font-size:1.2rem; font-weight:600;">{}분</p>
+                    <p style="font-size:1.5rem; font-weight:600;">{}분</p>
                 </div>
                 """.format(user["집합연수"]), unsafe_allow_html=True)
 
@@ -156,13 +156,13 @@ if st.button("📥 이수율 조회하기"):
                 st.markdown("""
                 <div style="background-color:#f7f7f9; padding:1.2rem; border-radius:10px;">
                     <h5 style="margin-bottom:0.3rem;">☑️ <b>컨퍼런스 (5차시 / 300분)</b></h5>
-                    <p style="font-size:1.2rem; font-weight:600;">{}분</p>
+                    <p style="font-size:1.5rem; font-weight:600;">{}분</p>
                 </div>
                 """.format(user["컨퍼런스"]), unsafe_allow_html=True)
 
             # 총 이수율
             st.divider()
-            st.metric(label="총 이수율", value=f"{user['사전진단'] + user['사전워크샵'] + user['원격연수'] + user['집합연수'] + user['컨퍼런스']}분 ({user['총이수율']}%) / 2400분")
+            st.metric(label="총 이수 시간 (이수율)", value=f"{user['사전진단'] + user['사전워크샵'] + user['원격연수'] + user['집합연수'] + user['컨퍼런스']}분 ({user['총이수율']}%) / 2400분")
 
             if user["이수여부"] == "이수":
                 st.success("✅ 이수 완료")
