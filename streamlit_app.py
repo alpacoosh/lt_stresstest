@@ -128,12 +128,12 @@ if st.button("📥 이수율 조회하기"):
                                         <th style="padding:6px 10px; border:1px solid #ddd;">8~9과정</th>
                                     </tr>
                                     <tr>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정1"]+user["과정2"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정3"]+user["과정4"]}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{int(user["과정1"])+int(user["과정2"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{int(user["과정3"])+int(user["과정4"])}</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정5"]}</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정6"]}</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정7"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정8"]+user["과정9"]}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{int(user["과정8"])+int(user["과정9"])}</td>
                                     </tr>
                                 </table>
                             </div>
