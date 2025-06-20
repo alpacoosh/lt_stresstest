@@ -70,8 +70,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="title-box"><h1>‍📚 [2025 교실혁명 선도교사 양성연수(5권역)] 🧑‍🏫</h1><p><이수율 현황 확인></p></div>', unsafe_allow_html=True)
-st.markdown("##### ※ 이수율은 강의 후 48시간 뒤 반영됩니다.")
+st.markdown('<div class="title-box"><h1>‍📚 [2025 교실혁명 선도교사 양성연수(5권역)] 🧑‍🏫</h1><p><이수 현황 확인></p></div>', unsafe_allow_html=True)
+st.markdown("##### ※ 이수 시간에 대한 확인은 강의 종료 후 48시간 뒤 조회 가능합니다. ")
 
 # ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
@@ -120,29 +120,24 @@ if st.button("📥 이수율 조회하기"):
                                 <p style="font-size:1.2rem; font-weight:600;">{user["원격연수"]}분</p>
                                 <table style="margin: 0 auto; border-collapse: collapse; font-size: 0.95rem;">
                                     <tr>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정1</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정2</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정3</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정4</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정5</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정6</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정7</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정8</th>
-                                        <th style="padding:6px 10px; border:1px solid #ddd;">과정9</th>
+                                        <th style="padding:6px 10px; border:1px solid #ddd;">1~2과정</th>
+                                        <th style="padding:6px 10px; border:1px solid #ddd;">3~4과정</th>
+                                        <th style="padding:6px 10px; border:1px solid #ddd;">5과정</th>
+                                        <th style="padding:6px 10px; border:1px solid #ddd;">6과정</th>
+                                        <th style="padding:6px 10px; border:1px solid #ddd;">7과정</th>
+                                        <th style="padding:6px 10px; border:1px solid #ddd;">8~9과정</th>
                                     </tr>
                                     <tr>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정1"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정2"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정3"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정4"]}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정1"]+user["과정2"]}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정3"]+user["과정4"]}</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정5"]}</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정6"]}</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정7"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정8"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정9"]}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정8"]+user["과정9"]}</td>
                                     </tr>
                                 </table>
                             </div>
+                            <p>*과정이 나눠서 진행될 경우 마지막 과정 종료 후 이수 시간이 입력됩니다.</p>
                             """, unsafe_allow_html=True)
 
             st.markdown("---")
