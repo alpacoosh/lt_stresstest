@@ -162,7 +162,16 @@ if st.button("📥 이수율 조회하기"):
 
             # 총 이수율
             st.divider()
-            total_minutes = sum(int(user[k]) for k in ["사전진단", "사전워크샵", "원격연수", "집합연수", "컨퍼런스"])
+
+            def safe_int(value):
+                try:
+                    return int(value)
+                except:
+                    return 0
+            
+            total_minutes = sum(safe_int(user[k]) for k in ["사전진단", "사전워크샵", "원격연수", "집합연수", "컨퍼런스"])
+
+
 
             st.metric(label="총 이수 시간 (이수율)", value=f"{total_minutes}분 ({user['총이수율']}%) / 2400분")
 
