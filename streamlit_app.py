@@ -84,6 +84,12 @@ def find_user(name, phone_last4):
         if user["이름"] == name and str(user["전화번호뒷자리"]).zfill(4) == phone_last4:
             return user
     return None
+    
+def safe_int(value):
+    try:
+        return int(value)
+    except:
+        return 0
 
 # 조회 버튼
 if st.button("📥 이수율 조회하기"):
@@ -128,12 +134,12 @@ if st.button("📥 이수율 조회하기"):
                                         <th style="padding:6px 10px; border:1px solid #ddd;">8~9과정</th>
                                     </tr>
                                     <tr>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{int(user["과정1"])+int(user["과정2"])}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{int(user["과정3"])+int(user["과정4"])}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정5"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정6"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{user["과정7"]}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{int(user["과정8"])+int(user["과정9"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정1"]) + safe_int(user["과정2"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정3"]) + safe_int(user["과정4"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정5"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정6"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정7"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정8"]) + safe_int(user["과정9"])}</td>
                                     </tr>
                                 </table>
                             </div>
