@@ -86,6 +86,7 @@ def find_user(name, phone_last4):
     return None
     
 def safe_int(value):
+    value = value.replace("분","")
     try:
         return int(value)
     except:
@@ -134,12 +135,12 @@ if st.button("📥 이수율 조회하기"):
                                         <th style="padding:6px 10px; border:1px solid #ddd;">8~9과정</th>
                                     </tr>
                                     <tr>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정1"]) + safe_int(user["과정2"])}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정3"]) + safe_int(user["과정4"])}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정5"])}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정6"])}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정7"])}</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정8"]) + safe_int(user["과정9"])}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정1"]) + safe_int(user["과정2"])}분</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정3"]) + safe_int(user["과정4"])}분</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정5"])}분</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정6"])}분</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정7"])}분</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정8"]) + safe_int(user["과정9"])분}</td>
                                     </tr>
                                 </table>
                             </div>
