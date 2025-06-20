@@ -140,7 +140,7 @@ if st.button("📥 이수율 조회하기"):
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정5"])}분</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정6"])}분</td>
                                         <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정7"])}분</td>
-                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정8"]) + safe_int(user["과정9"])분}</td>
+                                        <td style="padding:6px 10px; border:1px solid #ddd;">{safe_int(user["과정8"]) + safe_int(user["과정9"])}분</td>
                                     </tr>
                                 </table>
                             </div>
