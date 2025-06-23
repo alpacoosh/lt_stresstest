@@ -97,8 +97,7 @@ if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
-        user = find_user(name, phone_last4)
-        # 안내 문구 바로 아래 추가
+        # ✅ 안내 문구는 여기 — user 여부와 무관하게 항상 표시
         st.markdown("""
         <div style="background-color:#fff9e6; border-left: 5px solid #f0ad4e; padding: 1rem; margin-top: 1rem; border-radius: 5px;">
         <p style="margin: 0; font-size: 0.95rem;">
@@ -108,6 +107,10 @@ if st.button("📥 이수율 조회하기"):
         </p>
         </div>
         """, unsafe_allow_html=True)
+        user = find_user(name, phone_last4)
+        # 안내 문구 바로 아래 추가
+        
+        
         if user:
             st.success(f"🎉 {user['이름']} 선생님의 이수 정보")
 
