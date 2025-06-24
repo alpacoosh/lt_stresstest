@@ -9,7 +9,6 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-sheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").sheet1
 # ✅ 시트 열기
 try:
     sheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").sheet1
