@@ -30,35 +30,31 @@ st.markdown("""
         text-align: center;
         margin-bottom: 2rem;
     }
-    .title-box h1 {
-        margin-bottom: 0.2rem;
-        font-size: 1.7rem;
+    .info-block {
+        padding: 1rem;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        margin-bottom: 1.5rem;
     }
-    .title-box p {
-        font-size: 1.6rem;
-        margin-top: 0.3rem;
+    .info-block h4 {
+        font-size: 18px;
+        margin-bottom: 0.5rem;
+    }
+    .info-block p {
+        font-size: 22px;
         font-weight: 600;
+        margin: 0;
+        color: #222;
     }
     </style>
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="title-box"><h1>‍📚 [2025 교실혁명 선도교사 양성연수(5권역)] 🧑‍🏫</h1><p><이수 현황 확인></p></div>', unsafe_allow_html=True)
-st.markdown("##### ※ 이수 시간에 대한 확인은 강의 종료 후 48시간 뒤 조회 가능합니다.")
+st.markdown("##### ※ 이수 시간에 대한 확인은 강의 종료 후 48시간 뒤 조회 가능합니다. ")
 
 # ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
 phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
-
-st.markdown("""
-<div style="background-color:#fffbe6; border-left: 5px solid #ffc107; padding: 1.2rem 1.5rem; margin: 2rem 0 1rem 0; border-radius: 8px;">
-    <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
-        📌 <b>수료 기준 안내</b><br><br>
-        ✅ 전체 <b>40개 차시 중 80%(32개 차시)</b> 이상 이수 시 수료<br>
-        ✅ <b>2,400분 중 1,920분</b> 이상 참여 시 수료<br>
-        <span style="color:#666;">※ 단, 차시별로 80% 이상 이수 시 해당 차시 인정</span>
-    </p>
-</div>
-""", unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -69,14 +65,14 @@ def find_user(name, phone_last4):
             return user
     return None
 
+# ✅ 안전한 숫자 변환
 def safe_int(value):
-    value = str(value).replace("분", "")
     try:
-        return int(value)
+        return int(str(value).replace("분", "").strip())
     except:
         return 0
 
-# 조회 버튼
+# ✅ 조회 버튼 동작
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
@@ -85,65 +81,42 @@ if st.button("📥 이수율 조회하기"):
         if user:
             st.success(f"🎉 {user['이름']} 선생님의 이수 정보")
 
-            # 개별 블록 시각화
-            def block(title, minutes):
-                st.markdown(f"""
-                <div style='background-color:#f7f7f9; padding:1.2rem; border-radius:10px;'>
-                    <h5 style='margin-bottom:0.3rem;'>☑️ <b>{title}</b></h5>
-                    <p style='font-size:1.5rem; font-weight:600;'>{minutes}분</p>
-                </div>
-                """, unsafe_allow_html=True)
+            # ✅ 전체 차시별 박스 테이블 렌더링
+            def render_block(title, count, minutes, prefix):
+                cols = "".join([f"<td style='border:1px solid #ccc; text-align:center;'>{i}차시</td>" for i in range(1, count+1)])
+                values = "".join([f"<td style='border:1px solid #ccc; text-align:center;'>{safe_int(user.get(f'{prefix}{i}차', 0))}분</td>" for i in range(1, count+1)])
+                return f"""
+                <div class="info-block">
+                    <h4>{title}</h4>
+                    <table style="border-collapse: collapse; width:100%;">
+                        <tr>{cols}</tr>
+                        <tr>{values}</tr>
+                    </table>
+                </div>"""
 
-            col1, col2 = st.columns(2)
-            with col1:
-                block("사전진단 (2차시 / 120분)", user["사전진단"])
-            with col2:
-                block("사전워크숍 (3차시 / 180분)", user["사전워크샵"])
+            html_blocks = ""
+            html_blocks += render_block("① 사전진단 (2차시 / 100분)", 2, 100, "사전진단_")
+            html_blocks += render_block("② 사전워크숍 (3차시 / 150분)", 3, 150, "사전워크숍_")
+            html_blocks += render_block("③ 원격연수 (16차시 / 800분)", 16, 800, "원격연수_")
+            html_blocks += render_block("④ 집합연수 (14차시 / 700분)", 14, 700, "집합연수_")
+            html_blocks += render_block("⑤ 컨퍼런스 (5차시 / 250분)", 5, 250, "컨퍼런스_")
 
-            st.markdown("---")
+            st.markdown(html_blocks, unsafe_allow_html=True)
+
+            # ✅ 총합
+            all_keys = [f"사전진단_{i}차" for i in range(1,3)] + \
+                       [f"사전워크숍_{i}차" for i in range(1,4)] + \
+                       [f"원격연수_{i}차" for i in range(1,17)] + \
+                       [f"집합연수_{i}차" for i in range(1,15)] + \
+                       [f"컨퍼런스_{i}차" for i in range(1,6)]
+            total_min = sum([safe_int(user.get(k, 0)) for k in all_keys])
 
             st.markdown(f"""
-            <div style='background-color:#f7f7f9; padding:1.2rem; border-radius:10px; text-align:center;'>
-                <h5 style='margin-bottom:0.3rem;'>☑️ <b>원격연수 (9과정 16차시 / 960분)</b></h5>
-                <p style='font-size:1.5rem; font-weight:600;'>{user['원격연수']}분</p>
-                <table style='margin: 0 auto; border-collapse: collapse; font-size: 0.95rem;'>
-                    <tr>
-                        <th style='padding:6px 10px; border:1px solid #ddd;'>1~2과정</th>
-                        <th style='padding:6px 10px; border:1px solid #ddd;'>3~4과정</th>
-                        <th style='padding:6px 10px; border:1px solid #ddd;'>5과정</th>
-                        <th style='padding:6px 10px; border:1px solid #ddd;'>6과정</th>
-                        <th style='padding:6px 10px; border:1px solid #ddd;'>7과정</th>
-                        <th style='padding:6px 10px; border:1px solid #ddd;'>8~9과정</th>
-                    </tr>
-                    <tr>
-                        <td style='padding:6px 10px; border:1px solid #ddd;'>{safe_int(user['과정1']) + safe_int(user['과정2'])}분</td>
-                        <td style='padding:6px 10px; border:1px solid #ddd;'>{safe_int(user['과정3']) + safe_int(user['과정4'])}분</td>
-                        <td style='padding:6px 10px; border:1px solid #ddd;'>{safe_int(user['과정5'])}분</td>
-                        <td style='padding:6px 10px; border:1px solid #ddd;'>{safe_int(user['과정6'])}분</td>
-                        <td style='padding:6px 10px; border:1px solid #ddd;'>{safe_int(user['과정7'])}분</td>
-                        <td style='padding:6px 10px; border:1px solid #ddd;'>{safe_int(user['과정8']) + safe_int(user['과정9'])}분</td>
-                    </tr>
-                </table>
-            </div>
-            <p style='margin-top:0.5rem;'>*과정이 나눠서 진행될 경우 마지막 과정 종료 후 이수 시간이 입력됩니다.</p>
+                <div style="text-align:right; font-weight:600; margin-top:1rem; font-size:1.1rem;">
+                총 이수 시간 (이수율)<br>
+                {total_min}분 ({round(total_min/2000*100)}%) / 2000분
+                </div>
             """, unsafe_allow_html=True)
 
-            st.markdown("---")
-
-            col3, col4 = st.columns(2)
-            with col3:
-                block("집합연수 (14차시 / 840분)", user["집합연수"])
-            with col4:
-                block("컨퍼런스 (5차시 / 300분)", user["컨퍼런스"])
-
-            # 총 이수 시간 계산 및 표시
-            total_minutes = sum(safe_int(user[k]) for k in ["사전진단", "사전워크샵", "원격연수", "집합연수", "컨퍼런스"])
-            st.divider()
-            st.metric(label="총 이수 시간 (이수율)", value=f"{total_minutes}분 ({user['총이수율']}%) / 2400분")
-
-            if user["이수여부"] == "이수":
-                st.success("✅ 이수 완료")
-            else:
-                st.error("📌 미이수")
         else:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
