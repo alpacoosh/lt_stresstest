@@ -50,7 +50,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="title-box"><h1>‍📚 [2025 교실혁명 선도교사 양성연수(5권역)] 🧑‍🏫</h1><p><이수 현황 확인></p></div>', unsafe_allow_html=True)
-st.markdown("##### ※ 이수 시간에 대한 확인은 강의 종료 후 48시간 뒤 조회 가능합니다. ")
+
+# ✅ 수료 기준 안내 박스
+st.markdown("""
+<div style="background-color:#fffbe6; border-left: 5px solid #ffc107; padding: 1.2rem 1.5rem; margin: 0.1rem 0 0.5rem 0; border-radius: 8px;">
+    <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
+        📌 <b>수료 기준 안내</b><br><br>
+        ✅ 전체 <b>40개 차시 중 80%(32개 차시)</b> 이상 이수 시 수료<br>
+        ✅ <b>2,400분 중 1,920분</b> 이상 참여 시 수료<br>
+        <span style="color:#666;">※ 단, 차시별로 80% 이상 이수 시 해당 차시 인정</span>
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 # ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
@@ -65,12 +76,25 @@ def find_user(name, phone_last4):
             return user
     return None
 
-# ✅ 안전한 숫자 변환
+# ✅ 안전 숫자 변환
 def safe_int(value):
     try:
         return int(str(value).replace("분", "").strip())
     except:
         return 0
+
+# ✅ 차시별 박스 테이블 생성 함수
+def render_block(title, count, prefix):
+    cols = "".join([f"<td style='border:1px solid #ccc; text-align:center;'>{i}차시</td>" for i in range(1, count+1)])
+    values = "".join([f"<td style='border:1px solid #ccc; text-align:center;'>{safe_int(user.get(f'{prefix}{i}차', 0))}분</td>" for i in range(1, count+1)])
+    return f"""
+    <div class="info-block">
+        <h4>{title}</h4>
+        <table style="border-collapse: collapse; width:100%;">
+            <tr>{cols}</tr>
+            <tr>{values}</tr>
+        </table>
+    </div>"""
 
 # ✅ 조회 버튼 동작
 if st.button("📥 이수율 조회하기"):
@@ -81,42 +105,30 @@ if st.button("📥 이수율 조회하기"):
         if user:
             st.success(f"🎉 {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 전체 차시별 박스 테이블 렌더링
-            def render_block(title, count, minutes, prefix):
-                cols = "".join([f"<td style='border:1px solid #ccc; text-align:center;'>{i}차시</td>" for i in range(1, count+1)])
-                values = "".join([f"<td style='border:1px solid #ccc; text-align:center;'>{safe_int(user.get(f'{prefix}{i}차', 0))}분</td>" for i in range(1, count+1)])
-                return f"""
-                <div class="info-block">
-                    <h4>{title}</h4>
-                    <table style="border-collapse: collapse; width:100%;">
-                        <tr>{cols}</tr>
-                        <tr>{values}</tr>
-                    </table>
-                </div>"""
-
             html_blocks = ""
-            html_blocks += render_block("① 사전진단 (2차시 / 100분)", 2, 100, "사전진단_")
-            html_blocks += render_block("② 사전워크숍 (3차시 / 150분)", 3, 150, "사전워크숍_")
-            html_blocks += render_block("③ 원격연수 (16차시 / 800분)", 16, 800, "원격연수_")
-            html_blocks += render_block("④ 집합연수 (14차시 / 700분)", 14, 700, "집합연수_")
-            html_blocks += render_block("⑤ 컨퍼런스 (5차시 / 250분)", 5, 250, "컨퍼런스_")
-
+            html_blocks += render_block("① 사전진단 (2차시 / 100분)", 2, "사전진단_")
+            html_blocks += render_block("② 사전워크숍 (3차시 / 150분)", 3, "사전워크숍_")
+            html_blocks += render_block("③ 원격연수 (16차시 / 800분)", 16, "원격연수_")
+            html_blocks += render_block("④ 집합연수 (14차시 / 700분)", 14, "집합연수_")
+            html_blocks += render_block("⑤ 컨퍼런스 (5차시 / 250분)", 5, "컨퍼런스_")
             st.markdown(html_blocks, unsafe_allow_html=True)
 
-            # ✅ 총합
+            # ✅ 총 이수 시간 계산
             all_keys = [f"사전진단_{i}차" for i in range(1,3)] + \
                        [f"사전워크숍_{i}차" for i in range(1,4)] + \
                        [f"원격연수_{i}차" for i in range(1,17)] + \
                        [f"집합연수_{i}차" for i in range(1,15)] + \
                        [f"컨퍼런스_{i}차" for i in range(1,6)]
             total_min = sum([safe_int(user.get(k, 0)) for k in all_keys])
+            completion_rate = round(total_min / 2000 * 100)
 
+            # ✅ 하단 요약 출력
+            st.markdown("<hr style='margin-top:30px; margin-bottom:10px;'>", unsafe_allow_html=True)
             st.markdown(f"""
-                <div style="text-align:right; font-weight:600; margin-top:1rem; font-size:1.1rem;">
-                총 이수 시간 (이수율)<br>
-                {total_min}분 ({round(total_min/2000*100)}%) / 2000분
+                <div style="text-align:center; font-size:1.1rem; font-weight:600;">
+                    총 이수 시간 (이수율)<br>
+                    {total_min}분 ({completion_rate}%) / 2000분
                 </div>
             """, unsafe_allow_html=True)
-
         else:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
