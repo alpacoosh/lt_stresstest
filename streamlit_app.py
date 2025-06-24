@@ -42,6 +42,7 @@ for i in range(1, 3):
     if status_col in data.columns:
         data[f"{time_col}_상태"] = data[status_col]
 
+st.write(data.columns.tolist())
 
 # ✅ 숫자 변환 함수
 def to_int(v):
