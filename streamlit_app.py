@@ -93,6 +93,7 @@ def safe_int(value):
         return 0
 
     
+# 이수 기준 안내는 항상 보이도록 조건 제거
 st.markdown("""
 <div style="background-color:#fffbe6; border-left: 5px solid #ffc107; padding: 1.2rem 1.5rem; margin: 1.2rem 0; border-radius: 8px;">
     <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
@@ -103,6 +104,7 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
 # 조회 버튼
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
