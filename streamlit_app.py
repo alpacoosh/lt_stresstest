@@ -68,26 +68,27 @@ def safe_int(value):
         return 0
 
 def render_course_table(title, count, prefix):
-    # 좁게 보여야 할 경우: 14칸 이상이면 압축
+    # 14칸 이상이면 글자 작게
     compact = count >= 14
-    font_size = "0.85rem" if compact else "1rem"
-    padding = "4px 6px" if compact else "6px 10px"
-    min_width = "42px" if compact else "60px"
+    font_size = "0.7rem" if compact else "1rem"
+    padding = "2px 4px" if compact else "6px 10px"
+    min_width = "38px" if compact else "60px"
 
     header = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; white-space:nowrap; min-width:{min_width}; font-size:{font_size};'>{i}차시</td>"
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; "
+        f"white-space:nowrap; min-width:{min_width}; font-size:{font_size};'>{i}차시</td>"
         for i in range(1, count+1)
     ])
     values = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>"
-        f"{str(user.get(f'{prefix}{i}차', '00'))}분</td>"
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; "
+        f"font-size:{font_size};'>{str(user.get(f'{prefix}{i}차', '00'))}분</td>"
         for i in range(1, count+1)
     ])
 
     return f"""
-    <div style="background-color:#f9f9f9; border-radius:10px; padding:1rem; margin-bottom:1.5rem;">
-        <b>{title}</b>
-        <table style="border-collapse:collapse; width:100%; margin-top:0.5rem;">
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
+        <b style="font-size:0.95rem;">{title}</b>
+        <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
             <tr>{header}</tr>
             <tr>{values}</tr>
         </table>
