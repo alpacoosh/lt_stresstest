@@ -73,7 +73,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ✅ 표 출력 함수
 def render_table(title, prefix, count):
     compact = count >= 14
     font_size = "0.7rem" if compact else "1rem"
@@ -88,12 +87,18 @@ def render_table(title, prefix, count):
         f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>{user.get(f'{prefix}_{i}차시', '0')}</td>"
         for i in range(1, count+1)
     ])
+    status_row = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+        for i in range(1, count+1)
+    ])
+
     return f"""
     <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
         <b style="font-size:0.95rem;">{title}</b>
         <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
             <tr>{headers}</tr>
             <tr>{values}</tr>
+            <tr>{status_row}</tr>
         </table>
     </div>
     """
