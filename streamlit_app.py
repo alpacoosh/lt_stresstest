@@ -91,22 +91,22 @@ def safe_int(value):
         return int(value)
     except:
         return 0
-
+if name and phone_last4:
+    st.markdown("""
+    <div style="background-color:#fff9e6; border-left: 5px solid #f0ad4e; padding: 1rem; margin-top: 1rem; border-radius: 5px;">
+    <p style="margin: 0; font-size: 0.95rem;">
+    ※ 전체 <b>40개 차시 중 80%(32개 차시)</b> 이상 이수 시 수료<br>
+    ※ <b>2,400분 중 1,920분</b> 이상 참여 시 수료<br>
+    <span style="color:#888;">(*단, 차시별로 80% 이상 이수 시 해당 차시 인정)</span>
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
 # 조회 버튼
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
-        # ✅ 안내 문구는 여기 — user 여부와 무관하게 항상 표시
-        st.markdown("""
-        <div style="background-color:#fff9e6; border-left: 5px solid #f0ad4e; padding: 1rem; margin-top: 1rem; border-radius: 5px;">
-        <p style="margin: 0; font-size: 0.95rem;">
-        ※ 전체 <b>40개 차시 중 80%(32개 차시)</b> 이상 이수 시 수료<br>
-        ※ <b>2,400분 중 1,920분</b> 이상 참여 시 수료<br>
-        <span style="color:#888;">(*단, 차시별로 80% 이상 이수 시 해당 차시 인정)</span>
-        </p>
-        </div>
-        """, unsafe_allow_html=True)
+
         user = find_user(name, phone_last4)
         # 안내 문구 바로 아래 추가
         
