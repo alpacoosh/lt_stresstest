@@ -13,7 +13,7 @@ client = gspread.authorize(credentials)
 
 # ✅ 구글 시트 열기
 try:
-    sheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").sheet1
+    sheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
     records = sheet.get_all_records()
 except Exception as e:
     st.error(f"❌ 구글 시트 접근 중 오류: {e}")
