@@ -66,6 +66,16 @@ st.markdown("""
         text-align: center;
         margin-bottom: 2rem;
     }
+     .title-box h1 {
+        margin-bottom: 0.2rem;
+        font-size: 1.7rem;
+    }
+ .title-box p {
+        font-size: 1.6rem;
+        margin-top: 0.3rem;
+        font-weight: 600;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>이수 현황 확인</p></div>', unsafe_allow_html=True)
