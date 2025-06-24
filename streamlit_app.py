@@ -70,8 +70,7 @@ st.markdown("""
     <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
         📌 <b>수료 기준 안내</b><br><br>
         ✅ 전체 <b>40개 차시 중 80%(32개)</b> 이상 이수 시 수료<br>
-        ✅ <b>2,400분 중 1,920분</b> 이상 참여 시 수료<br>
-        <span style="color:#666;">※ 단, 차시별로 80% 이상 이수 시 해당 차시 인정</span>
+        ✅ 각 차시는 수업 시간의 <b>80%</b> 이상 참여해야 이수 인정<br>
     </p>
 </div>
 """, unsafe_allow_html=True)
