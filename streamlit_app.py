@@ -1,9 +1,8 @@
-# ... (상단 인증 및 설정 동일) ...
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 
-# ✅ 구글 시트 인증
+# ✅ 인증 및 시트 접근
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_info(
     dict(st.secrets["gcp_service_account"]),
@@ -11,12 +10,11 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-# ✅ 구글 시트 열기
 try:
     sheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
     records = sheet.get_all_records()
 except Exception as e:
-    st.error(f"❌ 구글 시트 접근 중 오류: {e}")
+    st.error(f"❌ 시트 접근 오류: {e}")
     st.stop()
 
 
