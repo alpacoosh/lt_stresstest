@@ -78,6 +78,9 @@ name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍�
 phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
 st.markdown("---")
 
+# ✅ 여백 줄이기 위한 spacer 추가
+st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
+
 # ✅ 사용자 찾기 함수
 def find_user(name, phone_last4):
     for user in records:
