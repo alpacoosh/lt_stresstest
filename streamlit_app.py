@@ -126,7 +126,7 @@ if st.button("📥 이수율 조회하기"):
                    [f"집합연수_{i}차시" for i in range(1, 15)] + \
                    [f"컨퍼런스_{i}차시" for i in range(1, 6)]
             total_min = sum([to_int(user.get(k, 0)) for k in keys])
-            completed_sessions = user['총이수율'] #sum([1 for k in keys if to_int(user.get(k, 0)) >= 40])
+            completed_sessions = int(user['총이수율']) #sum([1 for k in keys if to_int(user.get(k, 0)) >= 40])
             percent = round(completed_sessions / 40 * 100)
 
             st.markdown(f"""
