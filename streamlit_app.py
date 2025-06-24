@@ -76,14 +76,6 @@ st.markdown("##### ※ 이수 시간에 대한 확인은 강의 종료 후 48시
 # ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
 phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
-st.markdown("""
-    <style>
-    /* Streamlit 입력창 하단 여백 줄이기 */
-    .element-container:has(> div[data-testid="textInput"]) + .element-container {
-        margin-top: -12px;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
 st.markdown("---")
 
