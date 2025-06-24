@@ -1,21 +1,24 @@
+# ... (상단 인증 및 설정 동일) ...
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 
+# ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_info(
-    dict(st.secrets["gcp_service_account"]),  # 여기에 문제가 없다는 전제
+    dict(st.secrets["gcp_service_account"]),
     scopes=scopes
 )
 client = gspread.authorize(credentials)
 
-# ✅ 시트 열기
+# ✅ 구글 시트 열기
 try:
     sheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").sheet1
     records = sheet.get_all_records()
 except Exception as e:
     st.error(f"❌ 구글 시트 접근 중 오류: {e}")
     st.stop()
+
 
 # ✅ 기본 설정
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
