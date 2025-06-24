@@ -35,14 +35,14 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
-# ✅ 사전진단 이수 상태 추출 (.1 컬럼에서 가져옴)
-for i in range(1, 3):
-    time_col = f"사전진단_{i}차시"
-    status_col = f"{time_col}.1"
-    if status_col in data.columns:
-        data[f"{time_col}_상태"] = data[status_col]
+# ✅ 사전진단 상태 추출: "사전진단"이라는 이름의 컬럼만 필터링
+status_cols = [col for col in data.columns if col == "사전진단"]
 
-st.write(data.columns.tolist())
+# 순서대로 1차시, 2차시 상태를 추출하여 새로운 상태 컬럼으로 저장
+for i, status_col in enumerate(status_cols, start=1):
+    base_col = f"사전진단_{i}차시"
+    data[f"{base_col}_상태"] = data[status_col]
+
 
 # ✅ 숫자 변환 함수
 def to_int(v):
