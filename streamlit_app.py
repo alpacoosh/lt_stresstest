@@ -42,36 +42,6 @@ def to_int(v):
     except:
         return 0
 
-# ✅ 표 출력 함수 (하단 이수여부 표시 가능)
-def render_table(title, prefix, count, result_text=None):
-    compact = count >= 14
-    font_size = "0.7rem" if compact else "1rem"
-    padding = "2px 4px" if compact else "6px 10px"
-    min_width = "38px" if compact else "60px"
-
-    headers = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; text-align:center; font-size:{font_size};'>{i}차시</td>"
-        for i in range(1, count+1)
-    ])
-    values = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>{user.get(f'{prefix}_{i}차시', '0')}</td>"
-        for i in range(1, count+1)
-    ])
-    result_row = ""
-    if result_text:
-        result_row = f"<tr><td colspan='{count}' style='text-align:center; font-size:{font_size}; padding-top:6px; color:#d84315; font-weight:bold;'>{result_text}</td></tr>"
-
-    return f"""
-    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
-        <b style="font-size:0.95rem;">{title}</b>
-        <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
-            <tr>{headers}</tr>
-            <tr>{values}</tr>
-            {result_row}
-        </table>
-    </div>
-    """
-
 # ✅ UI 세팅
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
 st.markdown("""
@@ -103,6 +73,31 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ✅ 표 출력 함수
+def render_table(title, prefix, count):
+    compact = count >= 14
+    font_size = "0.7rem" if compact else "1rem"
+    padding = "2px 4px" if compact else "6px 10px"
+    min_width = "38px" if compact else "60px"
+
+    headers = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; text-align:center; font-size:{font_size};'>{i}차시</td>"
+        for i in range(1, count+1)
+    ])
+    values = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>{user.get(f'{prefix}_{i}차시', '0')}</td>"
+        for i in range(1, count+1)
+    ])
+    return f"""
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
+        <b style="font-size:0.95rem;">{title}</b>
+        <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
+            <tr>{headers}</tr>
+            <tr>{values}</tr>
+        </table>
+    </div>
+    """
+
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
@@ -115,14 +110,14 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 좌우 배치: 사전진단 (하단 이수여부 포함) + 사전워크숍 (그대로)
+            # ✅ 좌우 배치: 사전진단 + 사전워크숍
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2, result_text=user.get("사전진단_이수여부")), unsafe_allow_html=True)
+                st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
             with col2:
                 st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
 
-            # ✅ 나머지 세로 출력
+            # ✅ 나머지는 세로 배치
             st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
             st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
             st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
