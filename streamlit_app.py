@@ -35,21 +35,12 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
-# ✅ 사전진단 이수/미이수 여부 분리
+# ✅ 사전진단 이수 상태 추출 (.1 컬럼에서 가져옴)
 for i in range(1, 3):
-    col = f"사전진단_{i}차시"
-    new_time = []
-    new_status = []
-    for val in data[col]:
-        val_str = str(val)
-        if "이수" in val_str or "미이수" in val_str:
-            new_time.append("00")  # 시간 없음
-            new_status.append(val_str.strip())
-        else:
-            new_time.append(val_str)
-            new_status.append("")
-    data[col] = new_time
-    data[f"{col}_상태"] = new_status
+    time_col = f"사전진단_{i}차시"
+    status_col = f"{time_col}.1"
+    if status_col in data.columns:
+        data[f"{time_col}_상태"] = data[status_col]
 
 # ✅ 숫자 변환 함수
 def to_int(v):
@@ -89,6 +80,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ✅ 표 출력 함수 (사전진단만 상태줄 추가)
 def render_table(title, prefix, count):
     compact = count >= 14
     font_size = "0.7rem" if compact else "1rem"
@@ -104,7 +96,7 @@ def render_table(title, prefix, count):
         for i in range(1, count+1)
     ])
 
-    # ✅ 상태줄: 오직 사전진단만 표시
+    # 사전진단에만 상태줄 표시
     if prefix == "사전진단":
         statuses = "".join([
             f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
@@ -123,7 +115,6 @@ def render_table(title, prefix, count):
     </div>
     """
 
-
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
@@ -136,14 +127,13 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 좌우 배치: 사전진단 + 사전워크숍
+            # ✅ 표 출력
             col1, col2 = st.columns(2)
             with col1:
                 st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
             with col2:
                 st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
 
-            # ✅ 세로 배치
             st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
             st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
             st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
@@ -158,7 +148,6 @@ if st.button("📥 이수율 조회하기"):
             completed_sessions = int(user['총이수율'])
             percent = round(completed_sessions / 40 * 100)
 
-            # ✅ 이수율 출력
             st.markdown(f"""
             <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
                 총 이수율<br>
