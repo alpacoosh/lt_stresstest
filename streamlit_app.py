@@ -93,12 +93,13 @@ def safe_int(value):
         return 0
 if name and phone_last4:
     st.markdown("""
-    <div style="background-color:#fff9e6; border-left: 5px solid #f0ad4e; padding: 1rem; margin-top: 1rem; border-radius: 5px;">
-    <p style="margin: 0; font-size: 0.95rem;">
-    ※ 전체 <b>40개 차시 중 80%(32개 차시)</b> 이상 이수 시 수료<br>
-    ※ <b>2,400분 중 1,920분</b> 이상 참여 시 수료<br>
-    <span style="color:#888;">(*단, 차시별로 80% 이상 이수 시 해당 차시 인정)</span>
-    </p>
+    <div style="background-color:#fffbe6; border-left: 5px solid #ffc107; padding: 1.2rem 1.5rem; margin: 1.2rem 0; border-radius: 8px;">
+        <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
+            📌 <b>수료 기준 안내</b><br><br>
+            ✅ 전체 <b>40개 차시 중 80%(32개 차시)</b> 이상 이수 시 수료<br>
+            ✅ <b>2,400분 중 1,920분</b> 이상 참여 시 수료<br>
+            <span style="color:#666;">※ 단, 차시별로 80% 이상 이수 시 해당 차시 인정</span>
+        </p>
     </div>
     """, unsafe_allow_html=True)
 # 조회 버튼
