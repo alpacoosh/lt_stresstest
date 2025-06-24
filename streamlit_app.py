@@ -68,8 +68,15 @@ def safe_int(value):
         return 0
 
 def render_course_table(title, count, prefix):
-    header = "".join([f"<td style='border:1px solid black; padding:6px 10px; text-align:center;'>{i}차시</td>" for i in range(1, count+1)])
-    values = "".join([f"<td style='border:1px solid black; padding:6px 10px; text-align:center;'>{str(user.get(f'{prefix}{i}차', '00'))}분</td>" for i in range(1, count+1)])
+    header = "".join([
+        f"<td style='border:1px solid black; padding:6px 10px; text-align:center; white-space:nowrap; min-width:50px;'>{i}차시</td>"
+        for i in range(1, count+1)
+    ])
+    values = "".join([
+        f"<td style='border:1px solid black; padding:6px 10px; text-align:center;'>"
+        f"{str(user.get(f'{prefix}{i}차', '00'))}분</td>"
+        for i in range(1, count+1)
+    ])
     return f"""
     <div style="background-color:#f9f9f9; border-radius:10px; padding:1rem; margin-bottom:1.5rem;">
         <b>{title}</b>
@@ -79,6 +86,7 @@ def render_course_table(title, count, prefix):
         </table>
     </div>
     """
+
 
 # ✅ 버튼 클릭 시 동작
 if st.button("📥 이수율 조회하기"):
