@@ -35,13 +35,15 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
-# ✅ 사전진단 상태 추출: "사전진단"이라는 이름의 컬럼만 필터링
-status_cols = [col for col in data.columns if col == "사전진단"]
+# ✅ "사전진단"이라는 컬럼명이 반복되므로, 위치(index)를 기준으로 추출
+status_col_indices = [i for i, col in enumerate(data.columns) if col == "사전진단"]
 
-# 순서대로 1차시, 2차시 상태를 추출하여 새로운 상태 컬럼으로 저장
-for i, status_col in enumerate(status_cols, start=1):
+# index를 기준으로 열 값 추출
+for i, idx in enumerate(status_col_indices, start=1):
     base_col = f"사전진단_{i}차시"
-    data[f"{base_col}_상태"] = data[status_col]
+    status_values = data.iloc[:, idx]  # 위치 기반 열 선택
+    data[f"{base_col}_상태"] = status_values
+
 
 
 # ✅ 숫자 변환 함수
