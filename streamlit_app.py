@@ -68,15 +68,22 @@ def safe_int(value):
         return 0
 
 def render_course_table(title, count, prefix):
+    # 좁게 보여야 할 경우: 14칸 이상이면 압축
+    compact = count >= 14
+    font_size = "0.85rem" if compact else "1rem"
+    padding = "4px 6px" if compact else "6px 10px"
+    min_width = "42px" if compact else "60px"
+
     header = "".join([
-        f"<td style='border:1px solid black; padding:6px 10px; text-align:center; white-space:nowrap; min-width:50px;'>{i}차시</td>"
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; white-space:nowrap; min-width:{min_width}; font-size:{font_size};'>{i}차시</td>"
         for i in range(1, count+1)
     ])
     values = "".join([
-        f"<td style='border:1px solid black; padding:6px 10px; text-align:center;'>"
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>"
         f"{str(user.get(f'{prefix}{i}차', '00'))}분</td>"
         for i in range(1, count+1)
     ])
+
     return f"""
     <div style="background-color:#f9f9f9; border-radius:10px; padding:1rem; margin-bottom:1.5rem;">
         <b>{title}</b>
@@ -86,6 +93,7 @@ def render_course_table(title, count, prefix):
         </table>
     </div>
     """
+
 
 
 # ✅ 버튼 클릭 시 동작
