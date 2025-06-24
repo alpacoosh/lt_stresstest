@@ -89,7 +89,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ✅ 표 출력 함수 (이수/미이수 상태줄 포함)
 def render_table(title, prefix, count):
     compact = count >= 14
     font_size = "0.7rem" if compact else "1rem"
@@ -104,21 +103,26 @@ def render_table(title, prefix, count):
         f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>{user.get(f'{prefix}_{i}차시', '0')}</td>"
         for i in range(1, count+1)
     ])
-    statuses = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
-        for i in range(1, count+1)
-    ])
+
+    # ✅ 상태줄: 오직 사전진단만 표시
+    if prefix == "사전진단":
+        statuses = "".join([
+            f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+            for i in range(1, count+1)
+        ])
+        rows = f"<tr>{headers}</tr><tr>{minutes}</tr><tr>{statuses}</tr>"
+    else:
+        rows = f"<tr>{headers}</tr><tr>{minutes}</tr>"
 
     return f"""
     <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
         <b style="font-size:0.95rem;">{title}</b>
         <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
-            <tr>{headers}</tr>
-            <tr>{minutes}</tr>
-            <tr>{statuses}</tr>
+            {rows}
         </table>
     </div>
     """
+
 
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
