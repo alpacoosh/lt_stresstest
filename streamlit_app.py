@@ -58,14 +58,14 @@ def to_int(v):
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
 st.markdown("""
 <style>
-.title-box {
-    background-color: #003366;
-    color: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    text-align: center;
-    margin-bottom: 2rem;
-}
+    .title-box {
+        background-color: #003366;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>이수 현황 확인</p></div>', unsafe_allow_html=True)
