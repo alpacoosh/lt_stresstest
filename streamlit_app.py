@@ -105,6 +105,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
 
 # 조회 버튼
 if st.button("📥 이수율 조회하기"):
