@@ -1,10 +1,11 @@
+
 import streamlit as st
 import gspread
 import pandas as pd
 from google.oauth2.service_account import Credentials
 from collections import defaultdict
 
-# 구글 시트 인증
+# ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_info(
     dict(st.secrets["gcp_service_account"]),
@@ -12,7 +13,7 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-# 데이터 시트 불러오기
+# ✅ 데이터 시트 불러오기
 try:
     worksheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
     rows = worksheet.get_all_values()
@@ -21,7 +22,7 @@ except Exception as e:
     st.error(f"❌ 구글 시트 접근 중 오류: {e}")
     st.stop()
 
-# 2줄 헤더 처리
+# ✅ 2줄 헤더 처리
 multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
 multi_columns = []
@@ -35,8 +36,8 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
         multi_columns.append(f"{current_main}_{sub}")
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
-
-# 상태 컬럼 생성
+data.reset_index(drop=True, inplace=True)
+# ✅ 상태 컬럼 생성
 type_status_counter = defaultdict(int)
 for idx, col in enumerate(data.columns):
     if "_" not in col and col not in ["이름", "전화번호뒷자리", "총이수율", "총이수율(%)", "이수여부"]:
@@ -45,7 +46,7 @@ for idx, col in enumerate(data.columns):
         if base_col in data.columns:
             data[f"{base_col}_상태"] = data.iloc[:, idx]
 
-# UI 세팅
+# ✅ UI 세팅
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
 st.markdown("""
 <style>
@@ -70,11 +71,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
 
-# 사용자 입력
+# ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
 phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
 
-# 수료 기준 안내
+# ✅ 수료 기준 안내
 st.markdown("""
 <div style="background-color:#fffbe6; border-left: 5px solid #ffc107; padding: 1.2rem 1.5rem; margin: 1.5rem 0 1rem 0; border-radius: 8px;">
     <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
@@ -85,35 +86,40 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 병합 헤더 차시 테이블 렌더링 함수
-def render_merged_header_table(title, prefix, count, user):
+# ✅ 테이블 그리기 함수
+def render_table(title, prefix, count):
+    compact = count >= 14
+    font_size = "0.7rem" if compact else "1rem"
+    padding = "2px 4px" if compact else "6px 10px"
+    min_width = "38px" if compact else "60px"
+
+    headers = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; text-align:center; font-size:{font_size};'>{i}차시</td>"
+        for i in range(1, count+1)
+    ])
+    minutes = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
+        for i in range(1, count+1)
+    ])
+    statuses = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+        for i in range(1, count+1)
+    ])
     return f"""
-    <div style="background:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1.2rem;">
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
         <b style="font-size:0.95rem;">{title}</b>
-        <table style="border-collapse:collapse; width:100%; margin-top:0.3rem; table-layout:fixed;">
-            <tr>
-                <th rowspan="2" style="border:1px solid #ccc; padding:6px; background:#e0e0e0; width:50px; text-align:center;">차시</th>
-                {''.join([f"<th colspan='2' style='border:1px solid #ccc; background:#cfd8dc; text-align:center;'>{i}차시</th>" for i in range(1, count+1)])}
-            </tr>
-            <tr>
-                {''.join(["<td style='border:1px solid #ccc; text-align:center;'>제출</td><td style='border:1px solid #ccc; text-align:center;'>상태</td>" for _ in range(count)])}
-            </tr>
-            <tr>
-                <td style='border:1px solid #ccc; text-align:center;'>값</td>
-                {''.join([
-                    f"<td style='border:1px solid #ccc; text-align:center;'>{user.get(f'{prefix}_{i}차시_제출', '')}</td>"
-                    f"<td style='border:1px solid #ccc; text-align:center; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
-                    for i in range(1, count+1)
-                ])}
-            </tr>
+        <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
+            <tr>{headers}</tr>
+            <tr>{minutes}</tr>
+            <tr>{statuses}</tr>
         </table>
     </div>
     """
 
-# 이수율 조회 및 출력
+# ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
-        st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
+        st.warning(⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
         row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
         if len(row) == 0:
@@ -121,8 +127,6 @@ if st.button("📥 이수율 조회하기"):
         else:
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
-
-            # 연수 수강 정보 요약 테이블 출력
             summary_fields = [
                 ("사전진단", 88, 89, 90),
                 ("사전워크숍", 92, 93, 94),
@@ -131,40 +135,51 @@ if st.button("📥 이수율 조회하기"):
                 ("컨퍼런스", 104, 105, 106)
             ]
 
+
             summary_table_html = f"""
-            <div style="margin-top:2rem; background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
-            <h4 style="font-weight:600; color:#003366; font-size:1rem;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
-            <table style="border-collapse: collapse; width: 100%; font-size: 0.7rem; text-align: center; margin-top: 0.5rem;">
-            <tr style="color:black;">
-                <th style="border: 1px solid #ccc; padding: 6px;">연수유형</th>
-                <th style="border: 1px solid #ccc; padding: 6px;">수강 정보</th>
-                <th style="border: 1px solid #ccc; padding: 6px;">일자</th>
-                <th style="border: 1px solid #ccc; padding: 6px;">비고</th>
+            <div style="margin-top:2rem;">
+            <h4 style="font-weight:600; color:#003366;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
+            <table style="border-collapse: collapse; width: 100%; margin-top: 0.5rem; font-size: 0.9rem;">
+            <tr style="background-color:#003366; color:white;">
+                <th style="border: 1px solid #ccc; padding: 8px;">연수유형</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">수강 정보</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">일자</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">비고</th>
             </tr>
             """
+            
             for label, col_sugang, col_date, col_note in summary_fields:
                 summary_table_html += f"""
             <tr>
-                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{label}</td>
-                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{user.iloc[col_sugang]}</td>
-                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{user.iloc[col_date]}</td>
-                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{user.iloc[col_note]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">{label}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_sugang]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_date]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_note]}</td>
             </tr>
             """
+            
             summary_table_html += """
             </table>
             </div>
             """
+            
             st.markdown(summary_table_html, unsafe_allow_html=True)
 
-            # 병합 헤더 구조 차시별 테이블 출력
-            st.markdown(render_merged_header_table("① 사전진단 (2차시 / 100분)", "사전진단", 2, user), unsafe_allow_html=True)
-            st.markdown(render_merged_header_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3, user), unsafe_allow_html=True)
-            st.markdown(render_merged_header_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16, user), unsafe_allow_html=True)
-            st.markdown(render_merged_header_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14, user), unsafe_allow_html=True)
-            st.markdown(render_merged_header_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5, user), unsafe_allow_html=True)
 
-            # 이수율 계산
+
+
+
+            # ✅ 차시별 테이블 출력
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
+            with col2:
+                st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
+            st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
+            st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
+            st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
+
+            # ✅ 이수율 계산
             completed_sessions = int(user.get('총이수율', 0))
             percent = round(completed_sessions / 40 * 100)
             st.markdown(f"""
