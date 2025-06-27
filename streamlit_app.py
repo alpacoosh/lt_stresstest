@@ -92,12 +92,14 @@ def render_table_with_submit(title, prefix, count, user):
     min_width = "38px"
     height = "28px"
 
-    # 헤더 2줄 (차시 / 제출+상태)
+    # 1차시, 2차시 헤더
     header_top = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height}; "
+        f"<td colspan='2' style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
         for i in range(1, count+1)
     ])
+
+    # 제출 / 상태 헤더
     header_sub = "".join([
         f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle; font-weight:bold;'>제출</td>"
@@ -106,7 +108,7 @@ def render_table_with_submit(title, prefix, count, user):
         for _ in range(count)
     ])
 
-    # 제출 + 상태 2줄
+    # 제출 데이터 + 상태 데이터
     submits = "".join([
         f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시_제출', '')}</td>"
@@ -114,6 +116,7 @@ def render_table_with_submit(title, prefix, count, user):
         f"font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count+1)
     ])
+
     return f"""
     <div style="background:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
         <b style="font-size:0.95rem;">{title}</b>
@@ -124,6 +127,7 @@ def render_table_with_submit(title, prefix, count, user):
         </table>
     </div>
     """
+
 
 # 일반 테이블 (시간 + 상태만)
 def render_table_simple(title, prefix, count, user):
