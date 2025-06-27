@@ -109,10 +109,6 @@ def render_table(title, prefix, count):
                     <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_4차시', '')}</td>
                 </tr>
                 <tr>
-                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>제출</td>
-                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>제출</td>
-                </tr>
-                <tr>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_2차시', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_5차시', '')}</td>
                 </tr>
