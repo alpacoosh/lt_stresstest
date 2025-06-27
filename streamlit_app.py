@@ -3,6 +3,7 @@ import gspread
 import pandas as pd
 from collections import defaultdict
 from google.oauth2.service_account import Credentials
+import textwrap
 
 # ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -145,34 +146,30 @@ if st.button("📥 이수율 조회하기"):
                 비고 = user.get(f"{course_type}_비고", "")
                 course_info.append((course_type, 수강정보, 일자, 비고))
 
-            table_html = """
-            <table style="border-collapse:collapse; width:100%;">
-                <thead>
-                    <tr style="background-color:#003366; color:white;">
-                        <th style="padding:8px; border:1px solid #ccc;">연수유형</th>
-                        <th style="padding:8px; border:1px solid #ccc;">수강 정보</th>
-                        <th style="padding:8px; border:1px solid #ccc;">일자</th>
-                        <th style="padding:8px; border:1px solid #ccc;">비고</th>
-                    </tr>
-                </thead>
-                <tbody>
-            """
+            table_html = textwrap.dedent("""
+                <table style="border-collapse:collapse; width:100%;">
+                    <thead>
+                        <tr style="background-color:#003366; color:white;">
+                            <th style="padding:8px; border:1px solid #ccc;">연수유형</th>
+                            <th style="padding:8px; border:1px solid #ccc;">수강 정보</th>
+                            <th style="padding:8px; border:1px solid #ccc;">일자</th>
+                            <th style="padding:8px; border:1px solid #ccc;">비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            """)
             
-            # 행 채우기
             for t, info, date, note in course_info:
-                table_html += f"""
+                table_html += textwrap.dedent(f"""
                     <tr>
                         <td style="padding:8px; border:1px solid #ccc;">{t}</td>
                         <td style="padding:8px; border:1px solid #ccc;">{info}</td>
                         <td style="padding:8px; border:1px solid #ccc;">{date}</td>
                         <td style="padding:8px; border:1px solid #ccc;">{note}</td>
                     </tr>
-                """
+                """)
             
-            # 테이블 끝
             table_html += "</tbody></table>"
-            
-            # 이 줄이 중요!!!
             st.markdown(table_html, unsafe_allow_html=True)
 
             # ✅ 차시별 테이블
