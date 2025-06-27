@@ -136,7 +136,7 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 요약 테이블
+            # ✅ 연수 수강 요약 테이블
             st.markdown("### 📋 연수 수강 요약 정보")
             course_info = []
             for course_type in ["사전진단", "사전워크숍", "원격연수", "집합연수", "컨퍼런스"]:
@@ -167,7 +167,7 @@ if st.button("📥 이수율 조회하기"):
                     </tr>
                 """
             table_html += "</tbody></table>"
-            st.markdown(table_html, unsafe_allow_html=True)
+            st.markdown(table_html, unsafe_allow_html=True)  # ✅ 수정된 부분
 
             # ✅ 차시별 테이블
             col1, col2 = st.columns(2)
