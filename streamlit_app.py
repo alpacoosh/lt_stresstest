@@ -172,8 +172,15 @@ if st.button("📥 이수율 조회하기"):
                     </tr>
                 """
             
-            table_html += "</tbody></table></div>"
+            table_html += """
+                    </tbody>
+                </table>
+            </div>
+            """
+            
+            # Streamlit에 출력
             st.markdown(table_html, unsafe_allow_html=True)
+
 
 
             # ✅ 차시별 상세 테이블 출력
