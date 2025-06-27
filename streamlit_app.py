@@ -3,6 +3,7 @@ import gspread
 import pandas as pd
 from google.oauth2.service_account import Credentials
 from collections import defaultdict
+import textwrap
 
 # ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
