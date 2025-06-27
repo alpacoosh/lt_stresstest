@@ -143,7 +143,7 @@ if st.button("📥 이수율 조회하기"):
             # ✅ 연수 수강 정보 요약 테이블 HTML
             summary_table_html = f"""
             <div style="margin-top:2rem;">
-            <h4 style="font-weight:600; color:#003366;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
+            <h4 style="font-weight:600;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
             <table style="border-collapse: collapse; width: 100%; font-size: 0.85rem; text-align: center; margin-top: 0.5rem;">
             <tr style="background-color:#003366; color:white;">
                 <th style="border: 1px solid #ccc; padding: 8px;">연수유형</th>
