@@ -85,39 +85,46 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
     font_size = "0.7rem"
     padding = "1px 6px"
     min_width = "38px"
     height = "28px"
 
-    # 사전진단 테이블 별도 처리 (사진처럼 4행 2열 구조)
     if prefix == "사전진단":
+        # 3행 4열로 직접 지정 (1차시 제출, 1차시 상태, 2차시 제출, 2차시 상태)
         html = f"""
         <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
             <b style="font-size:0.95rem;">{title}</b>
             <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
                 <tr>
-                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; 
+                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
                                text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>1차시</td>
-                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; 
+                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
+                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>제출</td>
+                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
                                text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>2차시</td>
+                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
+                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>제출</td>
                 </tr>
                 <tr>
                     <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_1차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_2차시', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_4차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_5차시', '')}</td>
                 </tr>
                 <tr>
-                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_2차시', '')}</td>
-                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_5차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_3차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'></td>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_6차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'></td>
                 </tr>
             </table>
         </div>
         """
         return html
 
-    # 나머지 테이블은 기존 구조 유지
+    # 기존 테이블 구조 유지 (나머지 연수)
     headers = "".join([
         f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
