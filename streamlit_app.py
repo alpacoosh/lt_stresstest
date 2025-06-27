@@ -84,50 +84,42 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
-def render_sajeon_table(title, prefix, count):
+
+def render_table_special(title, prefix):
     font_size = "0.7rem"
-    padding = "1px 4px"
+    padding = "1px 2px"
     min_width = "38px"
     height = "28px"
 
-    # 1차시, 2차시 각각 점수와 제출을 위에 행으로 나누기
-    # 위 행: 점수(분) / 제출
     headers = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height}; "
+        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
-        for i in range(1, count + 1)
+        for i in range(1, 3)
     ])
 
-    scores = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
-        f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
-        for i in range(1, count + 1)
+    scores_submits = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00')}</td>"
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시_제출', '')}</td>"
+        for i in range(1, 3)
     ])
 
-    submits = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
-        f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시_제출', '')}</td>"
-        for i in range(1, count + 1)
-    ])
-
-    # 아래 행: 이수 상태 (기존 상태 컬러 유지)
     statuses = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
+        f"<td colspan='2' style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
-        for i in range(1, count + 1)
+        for i in range(1, 3)
     ])
 
     return f"""
     <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
         <b style="font-size:0.95rem;">{title}</b>
-        <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
+        <table style="border-collapse:collapse; width:auto; margin-top:0.3rem;">
             <tr>{headers}</tr>
-            <tr>{scores}</tr>
-            <tr>{submits}</tr>
+            <tr>{scores_submits}</tr>
             <tr>{statuses}</tr>
         </table>
     </div>
     """
+
 # ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
     font_size = "0.7rem"
@@ -218,7 +210,7 @@ if st.button("📥 이수율 조회하기"):
             # ✅ 차시별 테이블 출력
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown(render_sajeon_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
+                st.markdown(render_table_special("① 사전진단 (2차시 / 100분)", "사전진단"), unsafe_allow_html=True)
             with col2:
                 st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
             st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
