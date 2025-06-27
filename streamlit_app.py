@@ -142,15 +142,6 @@ if st.button("📥 이수율 조회하기"):
 
 
             # ✅ 연수 수강 정보 요약 박스
-            # ✅ 연수유형별 요약 정보 컬럼 수동 재매핑
-            summary_fields = [
-                ("사전진단", 88, 89, 90),      # 수강정보, 일자, 비고
-                ("사전워크숍", 92, 93, 94),
-                ("원격연수", 96, 97, 98),
-                ("집합연수", 100, 101, 102),
-                ("컨퍼런스", 104, 105, 106)
-            ]
-            
             summary_table_html = f"""
             <div style="margin-top:2rem;">
                 <h4 style="font-weight:600; color:#003366;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
@@ -174,9 +165,14 @@ if st.button("📥 이수율 조회하기"):
                     </tr>
                 """
             
-            summary_table_html += "</table></div>"
+            # 테이블 닫는 태그
+            summary_table_html += """
+                </table>
+            </div>
+            """
             
             st.markdown(summary_table_html, unsafe_allow_html=True)
+
 
 
 
