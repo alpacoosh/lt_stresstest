@@ -127,6 +127,7 @@ if st.button("📥 이수율 조회하기"):
         else:
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
+            # ✅ 요약 테이블 컬럼 위치 정의
             summary_fields = [
                 ("사전진단", 88, 89, 90),
                 ("사전워크숍", 92, 93, 94),
@@ -134,12 +135,12 @@ if st.button("📥 이수율 조회하기"):
                 ("집합연수", 100, 101, 102),
                 ("컨퍼런스", 104, 105, 106)
             ]
-
-
+            
+            # ✅ 연수 수강 정보 요약 테이블 HTML
             summary_table_html = f"""
             <div style="margin-top:2rem;">
             <h4 style="font-weight:600; color:#003366;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
-            <table style="border-collapse: collapse; width: 100%; margin-top: 0.5rem; font-size: 0.9rem;">
+            <table style="border-collapse: collapse; width: 100%; font-size: 0.85rem; text-align: center; margin-top: 0.5rem;">
             <tr style="background-color:#003366; color:white;">
                 <th style="border: 1px solid #ccc; padding: 8px;">연수유형</th>
                 <th style="border: 1px solid #ccc; padding: 8px;">수강 정보</th>
@@ -151,10 +152,10 @@ if st.button("📥 이수율 조회하기"):
             for label, col_sugang, col_date, col_note in summary_fields:
                 summary_table_html += f"""
             <tr>
-                <td style="border: 1px solid #ccc; padding: 6px;">{label}</td>
-                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_sugang]}</td>
-                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_date]}</td>
-                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_note]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{label}</td>
+                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{user.iloc[col_sugang]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{user.iloc[col_date]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{user.iloc[col_note]}</td>
             </tr>
             """
             
