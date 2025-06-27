@@ -89,23 +89,27 @@ st.markdown("""
 # ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
     font_size = "0.7rem"
-    padding = "1px 2px"     # 높이 줄이기
+    padding = "1px 2px"
     min_width = "38px"
-    height = "28px"         # 줄어든 행 높이
+    height = "28px"
 
-    # ✅ 볼드체로 차시명 렌더링
     headers = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
+        f"<td style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
         for i in range(1, count + 1)
     ])
     minutes = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
+        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
         for i in range(1, count + 1)
     ])
+    submits = "".join([
+        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
+        f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시_제출', '')}</td>"
+        for i in range(1, count + 1)
+    ])
     statuses = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
+        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count + 1)
     ])
@@ -116,6 +120,7 @@ def render_table(title, prefix, count):
         <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
             <tr>{headers}</tr>
             <tr>{minutes}</tr>
+            <tr>{submits}</tr>
             <tr>{statuses}</tr>
         </table>
     </div>
