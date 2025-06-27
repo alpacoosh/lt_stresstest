@@ -47,16 +47,6 @@ for idx, col in enumerate(data.columns):
         if base_col in data.columns:
             data[f"{base_col}_상태"] = data.iloc[:, idx]
 
-# ✅ 요약 테이블용 시트 불러오기
-try:
-    summary_ws = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("연수요약")
-    summary_rows = summary_ws.get_all_values()
-    df_summary = pd.DataFrame(summary_rows[1:], columns=summary_rows[0])  # 첫 줄은 헤더
-    info_blocks = df_summary.values.tolist()
-except Exception as e:
-    st.error(f"❌ 연수요약 시트 접근 오류: {e}")
-    info_blocks = []
-
 # ✅ UI 세팅
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
 st.markdown("""
