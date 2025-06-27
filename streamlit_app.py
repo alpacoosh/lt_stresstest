@@ -146,24 +146,24 @@ if st.button("📥 이수율 조회하기"):
             
             # ✅ 연수 수강 정보 요약 테이블 HTML
             summary_table_html = f"""
-            <div style="margin-top:2rem;">
-            <h4 style="font-weight:600;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
-            <table style="border-collapse: collapse; width: 100%; font-size: 0.85rem; text-align: center; margin-top: 0.5rem;">
-            <tr style=" color:black;">
-                <th style="border: 1px solid #ccc; padding: 8px;">연수유형</th>
-                <th style="border: 1px solid #ccc; padding: 8px;">수강 정보</th>
-                <th style="border: 1px solid #ccc; padding: 8px;">일자</th>
-                <th style="border: 1px solid #ccc; padding: 8px;">비고</th>
+            <div style="margin-top:2rem; background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
+            <h4 style="font-weight:600; color:#003366; font-size:1rem;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
+            <table style="border-collapse: collapse; width: 100%; font-size: 0.7rem; text-align: center; margin-top: 0.5rem;">
+            <tr style="background-color:#e0e0e0; color:black;">
+                <th style="border: 1px solid #ccc; padding: 6px;">연수유형</th>
+                <th style="border: 1px solid #ccc; padding: 6px;">수강 정보</th>
+                <th style="border: 1px solid #ccc; padding: 6px;">일자</th>
+                <th style="border: 1px solid #ccc; padding: 6px;">비고</th>
             </tr>
             """
             
             for label, col_sugang, col_date, col_note in summary_fields:
                 summary_table_html += f"""
             <tr>
-                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{label}</td>
-                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{user.iloc[col_sugang]}</td>
-                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{user.iloc[col_date]}</td>
-                <td style="border: 1px solid #ccc; padding: 6px; vertical-align: middle;">{user.iloc[col_note]}</td>
+                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{label}</td>
+                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{user.iloc[col_sugang]}</td>
+                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{user.iloc[col_date]}</td>
+                <td style="border: 1px solid #ccc; padding: 5px; vertical-align: middle;">{user.iloc[col_note]}</td>
             </tr>
             """
             
@@ -171,7 +171,6 @@ if st.button("📥 이수율 조회하기"):
             </table>
             </div>
             """
-            
             st.markdown(summary_table_html, unsafe_allow_html=True)
 
 
