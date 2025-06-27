@@ -149,7 +149,7 @@ if st.button("📥 이수율 조회하기"):
             <div style="margin-top:2rem; background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
             <h4 style="font-weight:600; color:#003366; font-size:1rem;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
             <table style="border-collapse: collapse; width: 100%; font-size: 0.7rem; text-align: center; margin-top: 0.5rem;">
-            <tr style="background-color:#e0e0e0; color:black;">
+            <tr style=" color:black;">
                 <th style="border: 1px solid #ccc; padding: 6px;">연수유형</th>
                 <th style="border: 1px solid #ccc; padding: 6px;">수강 정보</th>
                 <th style="border: 1px solid #ccc; padding: 6px;">일자</th>
