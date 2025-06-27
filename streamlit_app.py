@@ -88,49 +88,51 @@ st.markdown("""
 # 제출, 상태 컬럼 분리 출력 함수
 def render_table_with_submit(title, prefix, count):
     font_size = "0.7rem"
-    padding = "1px 2px"
-    min_width = "38px"
+    padding = "1px 4px"
+    min_width = "50px"
     height = "28px"
+    submit_bg = "#ffdead"
+    status_bg = "#ffe0b2"
 
-    # 차시 헤더
     headers = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height};"
+        f"<td style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
-        for i in range(1, count+1)
+        for i in range(1, count + 1)
     ])
 
-    # 점수 (예: 50)
-    scores = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>"
-        f"{user.get(f'{prefix}_{i}차시', '')}</td>"
-        for i in range(1, count+1)
-    ])
+    # 점수 + 제출 한 셀에 같이 출력
+    submit_cells = []
+    for i in range(1, count + 1):
+        score = user.get(f"{prefix}_{i}차시", "")
+        submit = user.get(f"{prefix}_{i}차시_제출", "")
+        submit_text = submit if submit else ""
+        cell_html = f"""
+            <td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>
+                <div>{score}</div>
+                <div style='background-color:{submit_bg}; margin-top:4px;'>{submit_text}</div>
+            </td>
+        """
+        submit_cells.append(cell_html)
+    submit_row = "".join(submit_cells)
 
-    # 제출 여부 (예: 제출)
-    submits = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>"
-        f"{user.get(f'{prefix}_{i}차시_제출', '')}</td>"
-        for i in range(1, count+1)
-    ])
-
-    # 상태 (예: 이수, 미이수)
+    # 상태는 따로 한 행에
     statuses = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>"
+        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle; background-color:{status_bg};'>"
         f"{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
-        for i in range(1, count+1)
+        for i in range(1, count + 1)
     ])
 
     return f"""
-    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1rem;">
         <b style="font-size:0.95rem;">{title}</b>
         <table style="border-collapse:collapse; width:100%; margin-top:0.3rem; text-align:center;">
             <tr>{headers}</tr>
-            <tr>{scores}</tr>
-            <tr>{submits}</tr>
+            <tr>{submit_row}</tr>
             <tr>{statuses}</tr>
         </table>
     </div>
     """
+
 
 # 이수율 조회 버튼 클릭 시 동작
 if st.button("📥 이수율 조회하기"):
