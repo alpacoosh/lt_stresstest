@@ -88,35 +88,39 @@ st.markdown("""
 
 # ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
-    # ✅ 모든 테이블에 compact 스타일 강제 적용
     font_size = "0.7rem"
-    padding = "2px 4px"
+    padding = "1px 2px"     # 높이 줄이기
     min_width = "38px"
-    height = "36px"
+    height = "28px"         # 줄어든 행 높이
 
+    # ✅ 볼드체로 차시명 렌더링
     headers = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>{i}차시</td>"
+        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
+        f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
         for i in range(1, count + 1)
     ])
     minutes = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
+        f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
         for i in range(1, count + 1)
     ])
     statuses = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
+        f"font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count + 1)
     ])
 
     return f"""
-    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
-        <b style="font-size:1rem;">{title}</b>
-        <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
+        <b style="font-size:0.95rem;">{title}</b>
+        <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
             <tr>{headers}</tr>
             <tr>{minutes}</tr>
             <tr>{statuses}</tr>
         </table>
     </div>
     """
+
 
 
 
