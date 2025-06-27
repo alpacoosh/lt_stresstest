@@ -2,6 +2,7 @@ import streamlit as st
 import gspread
 import pandas as pd
 from google.oauth2.service_account import Credentials
+from collections import defaultdict
 
 # ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -35,11 +36,7 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
-
 # ✅ 모든 연수 유형에 대해 상태 열 생성
-from collections import defaultdict
-
-# 각 연수 유형별 상태 컬럼을 순서대로 매핑
 type_status_counter = defaultdict(int)
 for idx, col in enumerate(data.columns):
     if "_" not in col and col not in ["이름", "전화번호뒷자리", "총이수율", "총이수율(%)", "이수여부"]:
@@ -67,19 +64,20 @@ st.markdown("""
         text-align: center;
         margin-bottom: 2rem;
     }
-     .title-box h1 {
+    .title-box h1 {
         margin-bottom: 0.2rem;
         font-size: 1.7rem;
     }
- .title-box p {
+    .title-box p {
         font-size: 1.6rem;
         margin-top: 0.3rem;
         font-weight: 600;
     }
-
 </style>
 """, unsafe_allow_html=True)
+
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
+
 # ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
 phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
@@ -95,40 +93,46 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("### 🏷️ 전체 컬럼명 리스트")
-st.write(list(data.columns))
-
-
-# ✅ 표 출력 함수 (모든 유형 상태 표시)
+# ✅ 표 출력 함수 (차시별)
 def render_table(title, prefix, count):
-    compact = count >= 14
-    font_size = "0.7rem" if compact else "1rem"
-    padding = "2px 4px" if compact else "6px 10px"
-    min_width = "38px" if compact else "60px"
-
-    headers = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; text-align:center; font-size:{font_size};'>{i}차시</td>"
-        for i in range(1, count+1)
-    ])
-    minutes = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
-        for i in range(1, count+1)
-    ])
-    statuses = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
-        for i in range(1, count+1)
-    ])
-
+    headers = "".join([f"<td>{i}차시</td>" for i in range(1, count+1)])
+    minutes = "".join([f"<td>{user.get(f'{prefix}_{i}차시', '00분')}</td>" for i in range(1, count+1)])
+    statuses = "".join([f"<td>{user.get(f'{prefix}_{i}차시_상태', '')}</td>" for i in range(1, count+1)])
     return f"""
-    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
-        <b style="font-size:0.95rem;">{title}</b>
-        <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
+    <div style='margin-bottom:1rem;'>
+        <b>{title}</b>
+        <table border='1' style='width:100%; text-align:center;'>
             <tr>{headers}</tr>
             <tr>{minutes}</tr>
             <tr>{statuses}</tr>
         </table>
-    </div>
-    """
+    </div>"""
+
+# ✅ 요약 표 출력 함수
+def render_summary_table(user):
+    course_blocks = [
+        ("사전진단", "연수유형_유형", "연수유형_수강정보", "연수유형_일자", "연수유형_비고"),
+        ("사전워크숍", "연수유형_유형.1", "연수유형_수강정보.1", "연수유형_일자.1", "연수유형_비고.1"),
+        ("원격연수", "연수유형_유형.2", "연수유형_수강정보.2", "연수유형_일자.2", "연수유형_비고.2"),
+        ("집합연수", "연수유형_유형.3", "연수유형_수강정보.3", "연수유형_일자.3", "연수유형_비고.3"),
+        ("컨퍼런스", "연수유형_유형.4", "연수유형_수강정보.4", "연수유형_일자.4", "연수유형_비고.4"),
+    ]
+    html = """
+    <table border='1' style='width:100%; text-align:center;'>
+        <thead><tr>
+            <th>연수유형</th><th>수강 정보</th><th>일자</th><th>비고</th>
+        </tr></thead><tbody>"""
+    for label, ty, info, date, note in course_blocks:
+        html += f"""
+            <tr>
+                <td>{user.get(ty, label)}</td>
+                <td>{user.get(info, '')}</td>
+                <td>{user.get(date, '')}</td>
+                <td style='text-align:left;'>{user.get(note, '')}</td>
+            </tr>
+        """
+    html += "</tbody></table>"
+    return html
 
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
@@ -142,35 +146,29 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 테이블 출력
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
-            with col2:
-                st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
+            # ✅ 연수 요약 테이블
+            st.markdown("### 🗓️ 연수 수강 정보 요약")
+            st.markdown(render_summary_table(user), unsafe_allow_html=True)
+
+            # ✅ 차시별 테이블
+            st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
+            st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
             st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
             st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
             st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
 
-            # ✅ 이수율 계산
-            keys = [f"사전진단_{i}차시" for i in range(1, 3)] + \
-                   [f"사전워크숍_{i}차시" for i in range(1, 4)] + \
-                   [f"원격연수_{i}차시" for i in range(1, 17)] + \
-                   [f"집합연수_{i}차시" for i in range(1, 15)] + \
-                   [f"컨퍼런스_{i}차시" for i in range(1, 6)]
+            # ✅ 이수율 계산 및 출력
             completed_sessions = int(user['총이수율']) if '총이수율' in user else 0
             percent = round(completed_sessions / 40 * 100)
-
-            # ✅ 이수율 출력
             st.markdown(f"""
-            <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
-                총 이수율<br>
-                {completed_sessions:02d}차시 / 40차시 ({percent}%)
-            </div>
+                <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
+                    총 이수율<br>
+                    {completed_sessions:02d}차시 / 40차시 ({percent}%)
+                </div>
             """, unsafe_allow_html=True)
 
             st.markdown(f"""
-            <div style="margin-top:1rem; background-color:#f8d7da; padding:1rem; text-align:center; border-radius:10px; color:#721c24; font-weight:600;">
-                📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
-            </div>
+                <div style="margin-top:1rem; background-color:#f8d7da; padding:1rem; text-align:center; border-radius:10px; color:#721c24; font-weight:600;">
+                    📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
+                </div>
             """, unsafe_allow_html=True)
