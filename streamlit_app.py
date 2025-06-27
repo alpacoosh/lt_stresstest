@@ -85,72 +85,57 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-def render_table_special(title, prefix):
-    font_size = "0.7rem"
-    padding = "1px 2px"
-    min_width = "38px"
-    height = "28px"
-
-    headers = (
-        f"<td colspan='2' style='border:1px solid black; padding:{padding}; min-width:{min_width}; "
-        f"height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>1차시</td>"
-        f"<td colspan='2' style='border:1px solid black; padding:{padding}; min-width:{min_width}; "
-        f"height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>2차시</td>"
-    )
-
-    sub_headers = (
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>점수</td>"
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>제출</td>"
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>점수</td>"
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>제출</td>"
-    )
-
-    scores_submits = (
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; vertical-align:middle;'>{user.get(f'{prefix}_1차시', '00')}</td>"
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; vertical-align:middle;'>{user.get(f'{prefix}_1차시_제출', '')}</td>"
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; vertical-align:middle;'>{user.get(f'{prefix}_2차시', '00')}</td>"
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; vertical-align:middle;'>{user.get(f'{prefix}_2차시_제출', '')}</td>"
-    )
-
-    statuses = (
-        f"<td colspan='2' style='border:1px solid black; padding:{padding}; height:{height}; "
-        f"text-align:center; font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_1차시_상태', '')}</td>"
-        f"<td colspan='2' style='border:1px solid black; padding:{padding}; height:{height}; "
-        f"text-align:center; font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_2차시_상태', '')}</td>"
-    )
-
-    return f"""
-    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem; max-width:400px;">
-        <b style="font-size:0.95rem;">{title}</b>
-        <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
-            <tr>{headers}</tr>
-            <tr>{sub_headers}</tr>
-            <tr>{scores_submits}</tr>
-            <tr>{statuses}</tr>
-        </table>
-    </div>
-    """
 
 
-# ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
     font_size = "0.7rem"
-    padding = "1px 2px"
+    padding = "1px 6px"
     min_width = "38px"
     height = "28px"
 
+    # 사전진단 테이블 별도 처리
+    if prefix == "사전진단":
+        # 4행 2열 테이블로 colspan, rowspan 적용
+        html = f"""
+        <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
+            <b style="font-size:0.95rem;">{title}</b>
+            <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
+                <tr>
+                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; 
+                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>1차시</td>
+                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; 
+                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>2차시</td>
+                </tr>
+                <tr>
+                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_1차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_4차시', '야호')}</td>
+                </tr>
+                <tr>
+                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_2차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_5차시', '야호')}</td>
+                </tr>
+                <tr>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_3차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_6차시', '')}</td>
+                </tr>
+            </table>
+        </div>
+        """
+        return html
+    
+    # 나머지 테이블은 기존대로 처리
     headers = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height}; "
+        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
         for i in range(1, count + 1)
     ])
     minutes = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
         for i in range(1, count + 1)
     ])
     statuses = "".join([
-        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count + 1)
     ])
