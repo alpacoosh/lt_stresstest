@@ -128,7 +128,7 @@ def render_table(title, prefix, count):
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
-        st.warning(⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
+        st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
         row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
         if len(row) == 0:
