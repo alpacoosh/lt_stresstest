@@ -99,18 +99,21 @@ def render_table(title, prefix, count):
                 <tr>
                     <td colspan="2" style='border:1px solid black; padding:{padding}; height:{height};
                         text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>1차시</td>
+                    <td style='border:none;'></td>
                     <td colspan="2" style='border:1px solid black; padding:{padding}; height:{height};
                         text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>2차시</td>
                 </tr>
                 <tr>
                     <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>{user.get(f'{prefix}_1차시', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>제출</td>
+                    <td style='border:none;'></td>
                     <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>{user.get(f'{prefix}_4차시', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>제출</td>
                 </tr>
                 <tr>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_2차시_상태', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'></td>
+                    <td style='border:none;'></td>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_5차시_상태', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'></td>
                 </tr>
@@ -118,7 +121,6 @@ def render_table(title, prefix, count):
         </div>
         """
         return html
-
     # 기존 테이블 구조 유지 (나머지 연수)
     headers = "".join([
         f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
