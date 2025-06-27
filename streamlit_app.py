@@ -12,7 +12,7 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-# ✅ 데이터 시트 불러오기
+# ✅ 시트 불러오기
 try:
     worksheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
     rows = worksheet.get_all_values()
@@ -35,8 +35,16 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
         multi_columns.append(f"{current_main}_{sub}")
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
-st.write("✅ 데이터 시트 컬럼 목록:", data.columns.tolist())  # ← 여기 추가
-data.reset_index(drop=True, inplace=True)
+
+# ✅ 연수 요약 info_blocks: 87~106 컬럼 기반
+info_blocks = []
+type_labels = ["사전진단", "사전워크숍", "원격연수", "집합연수", "콘퍼런스"]
+for i in range(5):
+    base_idx = 87 + i * 4
+    cols = data.columns[base_idx:base_idx+4]
+    row_values = data.iloc[0][cols].tolist()
+    info_blocks.append((row_values[0], row_values[1], row_values[2], row_values[3]))
+
 # ✅ 상태 컬럼 생성
 type_status_counter = defaultdict(int)
 for idx, col in enumerate(data.columns):
@@ -46,17 +54,7 @@ for idx, col in enumerate(data.columns):
         if base_col in data.columns:
             data[f"{base_col}_상태"] = data.iloc[:, idx]
 
-# ✅ 요약 테이블용 시트 불러오기
-try:
-    summary_ws = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("연수요약")
-    summary_rows = summary_ws.get_all_values()
-    df_summary = pd.DataFrame(summary_rows[1:], columns=summary_rows[0])  # 첫 줄은 헤더
-    info_blocks = df_summary.values.tolist()
-except Exception as e:
-    st.error(f"❌ 연수요약 시트 접근 오류: {e}")
-    info_blocks = []
-
-# ✅ UI 세팅
+# ✅ UI
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
 st.markdown("""
 <style>
@@ -81,11 +79,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
 
-# ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
 phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
 
-# ✅ 수료 기준 안내
 st.markdown("""
 <div style="background-color:#fffbe6; border-left: 5px solid #ffc107; padding: 1.2rem 1.5rem; margin: 1.5rem 0 1rem 0; border-radius: 8px;">
     <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
@@ -96,13 +92,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
     compact = count >= 14
     font_size = "0.7rem" if compact else "1rem"
     padding = "2px 4px" if compact else "6px 10px"
     min_width = "38px" if compact else "60px"
-
     headers = "".join([
         f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; text-align:center; font-size:{font_size};'>{i}차시</td>"
         for i in range(1, count+1)
@@ -126,7 +120,6 @@ def render_table(title, prefix, count):
     </div>
     """
 
-# ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
@@ -138,7 +131,7 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 연수 요약 테이블
+            # ✅ 연수 요약 테이블 출력
             st.markdown("### 🗓️ 연수 수강 정보 요약")
             table_html = """
 <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
@@ -188,7 +181,6 @@ if st.button("📥 이수율 조회하기"):
     {completed_sessions:02d}차시 / 40차시 ({percent}%)
 </div>
 """, unsafe_allow_html=True)
-
             st.markdown(f"""
 <div style="margin-top:1rem; background-color:#f8d7da; padding:1rem; text-align:center; border-radius:10px; color:#721c24; font-weight:600;">
     📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
