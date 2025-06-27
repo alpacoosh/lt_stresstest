@@ -147,6 +147,7 @@ if st.button("📥 이수율 조회하기"):
                 ("콘퍼런스", "미정", "8/13~8/14", "2일 중 택 1"),
             ]
 
+
             table_html = """
             <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
                 <table style='border-collapse: collapse; width: 100%;'>
