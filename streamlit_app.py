@@ -35,7 +35,7 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
         multi_columns.append(f"{current_main}_{sub}")
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
-data.reset_index(drop=True, inplace=True)
+
 # ✅ 상태 컬럼 생성
 type_status_counter = defaultdict(int)
 for idx, col in enumerate(data.columns):
@@ -88,23 +88,22 @@ st.markdown("""
 # ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
     font_size = "0.7rem"
-    padding = "1px 2px"     # 높이 줄이기
+    padding = "1px 2px"
     min_width = "38px"
-    height = "28px"         # 줄어든 행 높이
+    height = "28px"
 
-    # ✅ 볼드체로 차시명 렌더링
     headers = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
+        f"<td style='border:1px solid #ccc; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
         for i in range(1, count + 1)
     ])
     minutes = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
+        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
         for i in range(1, count + 1)
     ])
     statuses = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
+        f"<td style='border:1px solid #ccc; padding:{padding}; height:{height}; text-align:center; "
         f"font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count + 1)
     ])
@@ -119,9 +118,6 @@ def render_table(title, prefix, count):
         </table>
     </div>
     """
-
-
-
 
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
