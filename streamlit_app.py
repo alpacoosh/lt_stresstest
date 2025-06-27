@@ -19,7 +19,8 @@ try:
 except Exception as e:
     st.error(f"❌ 구글 시트 접근 중 오류: {e}")
     st.stop()
-
+st.markdown("### 🏷️ 전체 컬럼명 리스트")
+st.write(list(data.columns))
 # ✅ 2줄 헤더 정제
 multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
@@ -34,6 +35,7 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
         multi_columns.append(f"{current_main}_{sub}")
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
+
 
 # ✅ 모든 연수 유형에 대해 상태 열 생성
 from collections import defaultdict
