@@ -85,35 +85,39 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+submit1_col_idx = 3  # '사전진단' 제출1 컬럼 index
+complete1_col_idx = 4  # '사전진단' 이수1 컬럼 index
+submit2_col_idx = 6  # '사전진단' 제출2 컬럼 index
+complete2_col_idx = 7  # '사전진단' 이수2 컬럼 index
+
 def render_table(title, prefix, count):
     font_size = "0.7rem"
     padding = "1px 6px"
-    min_width = "38px"
     height = "28px"
+    min_width = "38px"
 
-    if prefix == "사전진단":
-        html = f"""
-        <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
-            <b style="font-size:0.95rem;">{title}</b>
-            <table style="border-collapse:collapse; width:100%; margin-top:0.3rem; text-align:center; font-size:{font_size};">
-                <tr>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold; width:50%;">1차시</td>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold; width:50%;">2차시</td>
-                </tr>
-                <tr>
-                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.get(f'{prefix}_1차시', '')}</td>
-                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">제출</td>
-                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.get(f'{prefix}_2차시', '')}</td>
-                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">제출</td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#ffe0b2;">이수</td>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#ffe0b2;">이수</td>
-                </tr>
-            </table>
-        </div>
-        """
-        return html
+    html = f"""
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
+        <b style="font-size:0.95rem;">{title}</b>
+        <table style="border-collapse:collapse; width:100%; margin-top:0.3rem; text-align:center; font-size:{font_size};">
+            <tr>
+                <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold; width:50%;">1차시</td>
+                <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold; width:50%;">2차시</td>
+            </tr>
+            <tr>
+                <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user[f'{prefix}_1차시']}</td>
+                <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.iloc[submit1_col_idx]}</td>
+                <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user[f'{prefix}_2차시']}</td>
+                <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.iloc[submit2_col_idx]}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#ffe0b2;">{user.iloc[complete1_col_idx]}</td>
+                <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#ffe0b2;">{user.iloc[complete2_col_idx]}</td>
+            </tr>
+        </table>
+    </div>
+    """
+    return html
     # 기존 테이블 구조 유지 (나머지 연수)
     headers = "".join([
         f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
