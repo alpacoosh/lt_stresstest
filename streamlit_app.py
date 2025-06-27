@@ -141,6 +141,7 @@ def render_table(title, prefix, count):
         </table>
     </div>
     """
+st.write(data.columns.tolist())
 
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
