@@ -56,23 +56,23 @@ def to_int(v):
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
 st.markdown("""
 <style>
-    .title-box {
-        background-color: #003366;
-        color: white;
-        padding: 1.5rem;
-        border-radius: 0.5rem;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    .title-box h1 {
-        margin-bottom: 0.2rem;
-        font-size: 1.7rem;
-    }
-    .title-box p {
-        font-size: 1.6rem;
-        margin-top: 0.3rem;
-        font-weight: 600;
-    }
+.title-box {
+    background-color: #003366;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.title-box h1 {
+    margin-bottom: 0.2rem;
+    font-size: 1.7rem;
+}
+.title-box p {
+    font-size: 1.6rem;
+    margin-top: 0.3rem;
+    font-weight: 600;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -93,46 +93,36 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ✅ 표 출력 함수 (차시별)
+# ✅ 표 출력 함수 (모든 유형 상태 표시)
 def render_table(title, prefix, count):
-    headers = "".join([f"<td>{i}차시</td>" for i in range(1, count+1)])
-    minutes = "".join([f"<td>{user.get(f'{prefix}_{i}차시', '00분')}</td>" for i in range(1, count+1)])
-    statuses = "".join([f"<td>{user.get(f'{prefix}_{i}차시_상태', '')}</td>" for i in range(1, count+1)])
+    compact = count >= 14
+    font_size = "0.7rem" if compact else "1rem"
+    padding = "2px 4px" if compact else "6px 10px"
+    min_width = "38px" if compact else "60px"
+
+    headers = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; text-align:center; font-size:{font_size};'>{i}차시</td>"
+        for i in range(1, count+1)
+    ])
+    minutes = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size};'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
+        for i in range(1, count+1)
+    ])
+    statuses = "".join([
+        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+        for i in range(1, count+1)
+    ])
+
     return f"""
-    <div style='margin-bottom:1rem;'>
-        <b>{title}</b>
-        <table border='1' style='width:100%; text-align:center;'>
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
+        <b style="font-size:0.95rem;">{title}</b>
+        <table style="border-collapse:collapse; width:100%; margin-top:0.4rem;">
             <tr>{headers}</tr>
             <tr>{minutes}</tr>
             <tr>{statuses}</tr>
         </table>
-    </div>"""
-
-# ✅ 요약 표 출력 함수
-def render_summary_table(user):
-    course_blocks = [
-        ("사전진단", "연수유형_유형", "연수유형_수강정보", "연수유형_일자", "연수유형_비고"),
-        ("사전워크숍", "연수유형_유형.1", "연수유형_수강정보.1", "연수유형_일자.1", "연수유형_비고.1"),
-        ("원격연수", "연수유형_유형.2", "연수유형_수강정보.2", "연수유형_일자.2", "연수유형_비고.2"),
-        ("집합연수", "연수유형_유형.3", "연수유형_수강정보.3", "연수유형_일자.3", "연수유형_비고.3"),
-        ("컨퍼런스", "연수유형_유형.4", "연수유형_수강정보.4", "연수유형_일자.4", "연수유형_비고.4"),
-    ]
-    html = """
-    <table border='1' style='width:100%; text-align:center;'>
-        <thead><tr>
-            <th>연수유형</th><th>수강 정보</th><th>일자</th><th>비고</th>
-        </tr></thead><tbody>"""
-    for label, ty, info, date, note in course_blocks:
-        html += f"""
-            <tr>
-                <td>{user.get(ty, label)}</td>
-                <td>{user.get(info, '')}</td>
-                <td>{user.get(date, '')}</td>
-                <td style='text-align:left;'>{user.get(note, '')}</td>
-            </tr>
-        """
-    html += "</tbody></table>"
-    return html
+    </div>
+    """
 
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
@@ -146,29 +136,77 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 연수 요약 테이블
+            # ✅ 수강 요약 테이블 출력
             st.markdown("### 🗓️ 연수 수강 정보 요약")
-            st.markdown(render_summary_table(user), unsafe_allow_html=True)
+            info_blocks = [
+                ("사전진단", 87),
+                ("사전워크숍", 91),
+                ("원격연수", 95),
+                ("집합연수", 99),
+                ("컨퍼런스", 103)
+            ]
 
-            # ✅ 차시별 테이블
-            st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
-            st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
+            summary_html = """
+            <div style="background-color:#f9f9f9; border-radius:10px; padding:1rem; margin-bottom:1.5rem;">
+                <table style="border-collapse:collapse; width:100%;">
+                    <thead>
+                        <tr style="background-color:#003366; color:white;">
+                            <th style="padding:8px; text-align:center;">연수유형</th>
+                            <th style="padding:8px; text-align:center;">수강 정보</th>
+                            <th style="padding:8px; text-align:center;">일자</th>
+                            <th style="padding:8px; text-align:center;">비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            """
+            for label, idx in info_blocks:
+                try:
+                    t_type = user.iloc[idx]
+                    t_info = user.iloc[idx+1]
+                    t_date = user.iloc[idx+2]
+                    t_note = user.iloc[idx+3]
+                except:
+                    t_type, t_info, t_date, t_note = "", "", "", ""
+                summary_html += f"""
+                    <tr>
+                        <td style='padding:6px; text-align:center;'>{t_type}</td>
+                        <td style='padding:6px; text-align:center;'>{t_info}</td>
+                        <td style='padding:6px; text-align:center;'>{t_date}</td>
+                        <td style='padding:6px; text-align:left;'>{t_note}</td>
+                    </tr>
+                """
+            summary_html += "</tbody></table></div>"
+            st.markdown(summary_html, unsafe_allow_html=True)
+
+            # ✅ 차시별 상세 테이블 출력
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
+            with col2:
+                st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
             st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
             st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
             st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
 
-            # ✅ 이수율 계산 및 출력
+            # ✅ 이수율 계산
+            keys = [f"사전진단_{i}차시" for i in range(1, 3)] + \
+                   [f"사전워크숍_{i}차시" for i in range(1, 4)] + \
+                   [f"원격연수_{i}차시" for i in range(1, 17)] + \
+                   [f"집합연수_{i}차시" for i in range(1, 15)] + \
+                   [f"컨퍼런스_{i}차시" for i in range(1, 6)]
             completed_sessions = int(user['총이수율']) if '총이수율' in user else 0
             percent = round(completed_sessions / 40 * 100)
+
+            # ✅ 이수율 출력
             st.markdown(f"""
-                <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
-                    총 이수율<br>
-                    {completed_sessions:02d}차시 / 40차시 ({percent}%)
-                </div>
+            <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
+                총 이수율<br>
+                {completed_sessions:02d}차시 / 40차시 ({percent}%)
+            </div>
             """, unsafe_allow_html=True)
 
             st.markdown(f"""
-                <div style="margin-top:1rem; background-color:#f8d7da; padding:1rem; text-align:center; border-radius:10px; color:#721c24; font-weight:600;">
-                    📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
-                </div>
+            <div style="margin-top:1rem; background-color:#f8d7da; padding:1rem; text-align:center; border-radius:10px; color:#721c24; font-weight:600;">
+                📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
+            </div>
             """, unsafe_allow_html=True)
