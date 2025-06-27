@@ -148,37 +148,35 @@ if st.button("📥 이수율 조회하기"):
             ]
 
 
-            # ✅ 연수 수강 정보 요약 박스
             summary_table_html = f"""
             <div style="margin-top:2rem;">
-                <h4 style="font-weight:600; color:#003366;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
-                <table style="border-collapse: collapse; width: 100%; margin-top: 0.5rem; font-size: 0.9rem;">
-                    <tr style="background-color:#003366; color:white;">
-                        <th style="border: 1px solid #ccc; padding: 8px;">연수유형</th>
-                        <th style="border: 1px solid #ccc; padding: 8px;">수강 정보</th>
-                        <th style="border: 1px solid #ccc; padding: 8px;">일자</th>
-                        <th style="border: 1px solid #ccc; padding: 8px;">비고</th>
-                    </tr>
+            <h4 style="font-weight:600; color:#003366;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
+            <table style="border-collapse: collapse; width: 100%; margin-top: 0.5rem; font-size: 0.9rem;">
+            <tr style="background-color:#003366; color:white;">
+                <th style="border: 1px solid #ccc; padding: 8px;">연수유형</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">수강 정보</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">일자</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">비고</th>
+            </tr>
             """
             
-            # 각 연수유형별 행 생성
             for label, col_sugang, col_date, col_note in summary_fields:
                 summary_table_html += f"""
-                    <tr>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{label}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_sugang]}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_date]}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_note]}</td>
-                    </tr>
-                """
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 6px;">{label}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_sugang]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_date]}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_note]}</td>
+            </tr>
+            """
             
-            # 테이블 닫는 태그
             summary_table_html += """
-                </table>
+            </table>
             </div>
             """
             
             st.markdown(summary_table_html, unsafe_allow_html=True)
+
 
 
 
