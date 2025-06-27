@@ -142,6 +142,15 @@ if st.button("📥 이수율 조회하기"):
 
 
             # ✅ 연수 수강 정보 요약 박스
+            # ✅ 연수유형별 요약 정보 컬럼 수동 재매핑
+            summary_fields = [
+                ("사전진단", 88, 89, 90),      # 수강정보, 일자, 비고
+                ("사전워크숍", 92, 93, 94),
+                ("원격연수", 96, 97, 98),
+                ("집합연수", 100, 101, 102),
+                ("컨퍼런스", 104, 105, 106)
+            ]
+            
             summary_table_html = f"""
             <div style="margin-top:2rem;">
                 <h4 style="font-weight:600; color:#003366;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
@@ -152,41 +161,23 @@ if st.button("📥 이수율 조회하기"):
                         <th style="border: 1px solid #ccc; padding: 8px;">일자</th>
                         <th style="border: 1px solid #ccc; padding: 8px;">비고</th>
                     </tr>
-                    <tr>
-                        <td style="border: 1px solid #ccc; padding: 6px;">사전진단</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('사전진단_수강정보', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('사전진단_일자', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('사전진단_비고', '')}</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ccc; padding: 6px;">사전워크숍</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('사전워크숍_수강정보', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('사전워크숍_일자', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('사전워크숍_비고', '')}</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ccc; padding: 6px;">원격연수</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('원격연수_수강정보', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('원격연수_일자', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('원격연수_비고', '')}</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ccc; padding: 6px;">집합연수</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('집합연수_수강정보', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('집합연수_일자', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('집합연수_비고', '')}</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ccc; padding: 6px;">컨퍼런스</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('컨퍼런스_수강정보', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('컨퍼런스_일자', '')}</td>
-                        <td style="border: 1px solid #ccc; padding: 6px;">{user.get('컨퍼런스_비고', '')}</td>
-                    </tr>
-                </table>
-            </div>
             """
             
+            # 각 연수유형별 행 생성
+            for label, col_sugang, col_date, col_note in summary_fields:
+                summary_table_html += f"""
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 6px;">{label}</td>
+                        <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_sugang]}</td>
+                        <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_date]}</td>
+                        <td style="border: 1px solid #ccc; padding: 6px;">{user.iloc[col_note]}</td>
+                    </tr>
+                """
+            
+            summary_table_html += "</table></div>"
+            
             st.markdown(summary_table_html, unsafe_allow_html=True)
+
 
 
             # ✅ 차시별 테이블 출력
