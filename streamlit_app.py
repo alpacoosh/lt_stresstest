@@ -42,8 +42,11 @@ type_labels = ["사전진단", "사전워크숍", "원격연수", "집합연수"
 for i in range(5):
     base_idx = 87 + i * 4
     cols = data.columns[base_idx:base_idx+4]
-    row_values = data.iloc[0][cols].tolist()
-    info_blocks.append((row_values[0], row_values[1], row_values[2], row_values[3]))
+    # 중복 제거 후 첫 행만 사용
+    unique_rows = data[cols].drop_duplicates().reset_index(drop=True)
+    if not unique_rows.empty:
+        row_values = unique_rows.iloc[0].tolist()
+        info_blocks.append(tuple(row_values))
 
 # ✅ 상태 컬럼 생성
 type_status_counter = defaultdict(int)
