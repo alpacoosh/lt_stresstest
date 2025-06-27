@@ -207,7 +207,7 @@ if st.button("📥 이수율 조회하기"):
             # ✅ 차시별 테이블 출력
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown(render_table_special("① 사전진단 (2차시 / 100분)", "사전진단"), unsafe_allow_html=True)
+                st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단"), unsafe_allow_html=True)
             with col2:
                 st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
             st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
