@@ -23,23 +23,18 @@ except Exception as e:
     st.stop()
 
 # ✅ 2줄 헤더 처리
+
 multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
-
 multi_columns = []
-i = 0
-while i < len(multi_header.columns):
-    main = multi_header.iloc[0, i]
-    sub1 = multi_header.iloc[1, i]
-    sub2 = multi_header.iloc[1, i+1]
-    sub3 = multi_header.iloc[1, i+2]
-    multi_columns.extend([
-        f"{main}_{sub1}",     # ex) 사전진단_1차시
-        f"{main}_{sub2}",     # ex) 사전진단_제출
-        f"{main}_{sub3}",     # ex) 사전진단_이수
-    ])
-    i += 3
-
+current_main = ""
+for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
+    if main:
+        current_main = main
+    if sub.strip() == "":
+        multi_columns.append(current_main)
+    else:
+        multi_columns.append(f"{current_main}_{sub}")
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
