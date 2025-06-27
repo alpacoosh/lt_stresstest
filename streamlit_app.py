@@ -138,45 +138,26 @@ if st.button("📥 이수율 조회하기"):
 
             # ✅ 수강 요약 테이블 출력
             st.markdown("### 🗓️ 연수 수강 정보 요약")
-            info_blocks = [
-                ("사전진단", 87),
-                ("사전워크숍", 91),
-                ("원격연수", 95),
-                ("집합연수", 99),
-                ("컨퍼런스", 103)
-            ]
 
-            summary_html = """
-            <div style="background-color:#f9f9f9; border-radius:10px; padding:1rem; margin-bottom:1.5rem;">
-                <table style="border-collapse:collapse; width:100%;">
-                    <thead>
-                        <tr style="background-color:#003366; color:white;">
-                            <th style="padding:8px; text-align:center;">연수유형</th>
-                            <th style="padding:8px; text-align:center;">수강 정보</th>
-                            <th style="padding:8px; text-align:center;">일자</th>
-                            <th style="padding:8px; text-align:center;">비고</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            table_html = """
+            <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
+                <table style='border-collapse: collapse; width: 100%;'>
             """
-            for label, idx in info_blocks:
-                try:
-                    t_type = user.iloc[idx]
-                    t_info = user.iloc[idx+1]
-                    t_date = user.iloc[idx+2]
-                    t_note = user.iloc[idx+3]
-                except:
-                    t_type, t_info, t_date, t_note = "", "", "", ""
-                summary_html += f"""
-                    <tr>
-                        <td style='padding:6px; text-align:center;'>{t_type}</td>
-                        <td style='padding:6px; text-align:center;'>{t_info}</td>
-                        <td style='padding:6px; text-align:center;'>{t_date}</td>
-                        <td style='padding:6px; text-align:left;'>{t_note}</td>
-                    </tr>
+            
+            for title, a, b, c in info_blocks:
+                table_html += f"""
+                <tr>
+                    <td style='padding:6px; text-align:center;'>{title.strip()}</td>
+                    <td style='padding:6px; text-align:center;'>{a.strip()}</td>
+                    <td style='padding:6px; text-align:center;'>{b.strip()}</td>
+                    <td style='padding:6px; text-align:left;'>{c.strip()}</td>
+                </tr>
                 """
-            summary_html += "</tbody></table></div>"
-            st.markdown(summary_html, unsafe_allow_html=True)
+            
+            table_html += "</table></div>"
+            
+            st.markdown(table_html, unsafe_allow_html=True)
+
 
             # ✅ 차시별 상세 테이블 출력
             col1, col2 = st.columns(2)
