@@ -88,23 +88,25 @@ st.markdown("""
 
 # ✅ 테이블 그리기 함수
 def render_table(title, prefix, count):
-    font_size = "0.85rem"
-    padding = "6px 8px"
-    min_width = "42px"
+    # ✅ 모든 테이블에 compact 스타일 강제 적용
+    font_size = "0.7rem"
+    padding = "2px 4px"
+    min_width = "38px"
     height = "36px"
 
     headers = "".join([
         f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>{i}차시</td>"
-        for i in range(1, count+1)
+        for i in range(1, count + 1)
     ])
     minutes = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; height:{height}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '0')}</td>"
-        for i in range(1, count+1)
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle;'>{user.get(f'{prefix}_{i}차시', '00분')}</td>"
+        for i in range(1, count + 1)
     ])
     statuses = "".join([
-        f"<td style='border:1px solid black; padding:{padding}; text-align:center; font-size:{font_size}; height:{height}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
-        for i in range(1, count+1)
+        f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; font-size:{font_size}; vertical-align:middle; background-color:#ffe0b2;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+        for i in range(1, count + 1)
     ])
+
     return f"""
     <div style="background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
         <b style="font-size:1rem;">{title}</b>
@@ -115,6 +117,7 @@ def render_table(title, prefix, count):
         </table>
     </div>
     """
+
 
 
 # ✅ 이수율 조회
