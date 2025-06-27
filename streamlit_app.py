@@ -157,6 +157,8 @@ if st.button("📥 이수율 조회하기"):
                 </thead>
                 <tbody>
             """
+            
+            # 행 채우기
             for t, info, date, note in course_info:
                 table_html += f"""
                     <tr>
@@ -166,8 +168,12 @@ if st.button("📥 이수율 조회하기"):
                         <td style="padding:8px; border:1px solid #ccc;">{note}</td>
                     </tr>
                 """
+            
+            # 테이블 끝
             table_html += "</tbody></table>"
-            st.markdown(table_html, unsafe_allow_html=True)  # ✅ 수정된 부분
+            
+            # 이 줄이 중요!!!
+            st.markdown(table_html, unsafe_allow_html=True)
 
             # ✅ 차시별 테이블
             col1, col2 = st.columns(2)
