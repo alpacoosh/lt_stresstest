@@ -142,33 +142,40 @@ if st.button("📥 이수율 조회하기"):
             # ✅ 연수 요약 테이블
             st.markdown("### 🗓️ 연수 수강 정보 요약")
             table_html = """
-<div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
-<table style='border-collapse: collapse; width: 100%;'>
-<thead>
-<tr style="background-color:#eee;">
-    <th style='padding:6px; text-align:center;'>연수 유형</th>
-    <th style='padding:6px; text-align:center;'>차시</th>
-    <th style='padding:6px; text-align:center;'>일정</th>
-    <th style='padding:6px; text-align:left;'>비고</th>
-</tr>
-</thead>
-<tbody>
-"""
-            for title, a, b, c in info_blocks:
+            <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
+            <table style='border-collapse: collapse; width: 100%;'>
+            <thead>
+            <tr style="background-color:#eee;">
+                <th style='padding:6px; text-align:center;'>연수 유형</th>
+                <th style='padding:6px; text-align:center;'>차시</th>
+                <th style='padding:6px; text-align:center;'>일정</th>
+                <th style='padding:6px; text-align:left;'>비고</th>
+            </tr>
+            </thead>
+            <tbody>
+            """
+            # ✅ data에서 컬럼 87번부터 4개씩 그룹핑하여 가져오기
+            col_list = data.columns.tolist()
+            summary_columns = col_list[87:]
+            grouped = [summary_columns[i:i+4] for i in range(0, len(summary_columns), 4)]
+            for cols in grouped:
+                유형, 수강정보, 일정, 비고 = cols
                 table_html += f"""
-<tr>
-    <td style='padding:6px; text-align:center;'>{title.strip()}</td>
-    <td style='padding:6px; text-align:center;'>{a.strip()}</td>
-    <td style='padding:6px; text-align:center;'>{b.strip()}</td>
-    <td style='padding:6px; text-align:left;'>{c.strip()}</td>
-</tr>
-"""
+            <tr>
+                <td style='padding:6px; text-align:center;'>{user[유형]}</td>
+                <td style='padding:6px; text-align:center;'>{user[수강정보]}</td>
+                <td style='padding:6px; text-align:center;'>{user[일정]}</td>
+                <td style='padding:6px; text-align:left;'>{user[비고]}</td>
+            </tr>
+            """
+            
             table_html += """
-</tbody>
-</table>
-</div>
-"""
+            </tbody>
+            </table>
+            </div>
+            """
             st.markdown(table_html, unsafe_allow_html=True)
+
 
             # ✅ 차시별 테이블 출력
             col1, col2 = st.columns(2)
