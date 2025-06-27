@@ -12,31 +12,37 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-# ✅ 데이터 시트 불러오기
+# ✅ 시트4 불러오기
 try:
     worksheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
     rows = worksheet.get_all_values()
     df_raw = pd.DataFrame(rows)
 except Exception as e:
-    st.error(f"❌ 구글 시트 접근 중 오류: {e}")
+    st.error(f"❌ 시트4 접근 오류: {e}")
     st.stop()
 
-# ✅ 2줄 헤더 처리
+# ✅ 헤더 처리 + 컬럼명 재정의
 multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
 multi_columns = []
-current_main = ""
+
+group_titles = ["사전진단", "사전워크숍", "원격연수", "집합연수", "콘퍼런스"]
+group_index = 0
+
 for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
-    if main:
-        current_main = main
-    if sub.strip() == "":
-        multi_columns.append(current_main)
+    if main == "연수유형" and sub.strip() in ["유형", "수강정보", "일자", "비고"]:
+        group = group_titles[group_index // 4]
+        multi_columns.append(f"{group}_{sub.strip()}")
+        group_index += 1
     else:
-        multi_columns.append(f"{current_main}_{sub}")
+        if sub.strip() == "":
+            multi_columns.append(main)
+        else:
+            multi_columns.append(f"{main}_{sub}")
+
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
-st.write("✅ 데이터 시트 컬럼 목록:", data.columns.tolist())  # ← 여기 추가
-data.reset_index(drop=True, inplace=True)
+
 # ✅ 상태 컬럼 생성
 type_status_counter = defaultdict(int)
 for idx, col in enumerate(data.columns):
@@ -45,16 +51,6 @@ for idx, col in enumerate(data.columns):
         base_col = f"{col}_{type_status_counter[col]}차시"
         if base_col in data.columns:
             data[f"{base_col}_상태"] = data.iloc[:, idx]
-
-# ✅ 요약 테이블용 시트 불러오기
-try:
-    summary_ws = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("연수요약")
-    summary_rows = summary_ws.get_all_values()
-    df_summary = pd.DataFrame(summary_rows[1:], columns=summary_rows[0])  # 첫 줄은 헤더
-    info_blocks = df_summary.values.tolist()
-except Exception as e:
-    st.error(f"❌ 연수요약 시트 접근 오류: {e}")
-    info_blocks = []
 
 # ✅ UI 세팅
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
@@ -96,7 +92,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ✅ 테이블 그리기 함수
+# ✅ 테이블 출력 함수
 def render_table(title, prefix, count):
     compact = count >= 14
     font_size = "0.7rem" if compact else "1rem"
@@ -138,7 +134,17 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 연수 요약 테이블
+            # ✅ info_blocks 만들기
+            info_blocks = []
+            for g in group_titles:
+                info_blocks.append([
+                    user.get(f"{g}_유형", ""),
+                    user.get(f"{g}_수강정보", ""),
+                    user.get(f"{g}_일자", ""),
+                    user.get(f"{g}_비고", "")
+                ])
+
+            # ✅ 수강 요약 테이블 출력
             st.markdown("### 🗓️ 연수 수강 정보 요약")
             table_html = """
 <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
@@ -156,10 +162,10 @@ if st.button("📥 이수율 조회하기"):
             for title, a, b, c in info_blocks:
                 table_html += f"""
 <tr>
-    <td style='padding:6px; text-align:center;'>{title.strip()}</td>
-    <td style='padding:6px; text-align:center;'>{a.strip()}</td>
-    <td style='padding:6px; text-align:center;'>{b.strip()}</td>
-    <td style='padding:6px; text-align:left;'>{c.strip()}</td>
+    <td style='padding:6px; text-align:center;'>{title}</td>
+    <td style='padding:6px; text-align:center;'>{a}</td>
+    <td style='padding:6px; text-align:center;'>{b}</td>
+    <td style='padding:6px; text-align:left;'>{c}</td>
 </tr>
 """
             table_html += """
@@ -169,7 +175,7 @@ if st.button("📥 이수율 조회하기"):
 """
             st.markdown(table_html, unsafe_allow_html=True)
 
-            # ✅ 차시별 테이블 출력
+            # ✅ 차시별 상세 표
             col1, col2 = st.columns(2)
             with col1:
                 st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
@@ -180,8 +186,9 @@ if st.button("📥 이수율 조회하기"):
             st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
 
             # ✅ 이수율 계산
-            completed_sessions = int(user.get('총이수율', 0))
+            completed_sessions = int(user.get("총이수율", 0))
             percent = round(completed_sessions / 40 * 100)
+
             st.markdown(f"""
 <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
     총 이수율<br>
