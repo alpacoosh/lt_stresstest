@@ -22,18 +22,25 @@ except Exception as e:
     st.error(f"❌ 구글 시트 접근 중 오류: {e}")
     st.stop()
 
-# ✅ 2줄 헤더 정제
+# ✅ 병합된 2줄 헤더 정제 처리
 multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
 multi_columns = []
 current_main = ""
+repeat_count = defaultdict(int)
+
 for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
-    if main:
-        current_main = main
-    if sub in ["", " "]:
-        multi_columns.append(current_main)
+    if main.strip():
+        current_main = main.strip()
+        repeat_count[current_main] = 1
     else:
-        multi_columns.append(f"{current_main}_{sub}")
+        repeat_count[current_main] += 1
+
+    if sub.strip():
+        multi_columns.append(f"{current_main}_{sub.strip()}")
+    else:
+        multi_columns.append(f"{current_main}_{repeat_count[current_main]}")
+
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
@@ -65,16 +72,15 @@ st.markdown("""
         text-align: center;
         margin-bottom: 2rem;
     }
-     .title-box h1 {
+    .title-box h1 {
         margin-bottom: 0.2rem;
         font-size: 1.7rem;
     }
- .title-box p {
+    .title-box p {
         font-size: 1.6rem;
         margin-top: 0.3rem;
         font-weight: 600;
     }
-
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
@@ -140,7 +146,7 @@ if st.button("📥 이수율 조회하기"):
             # ✅ 연수 수강 요약 테이블
             st.markdown("### 📋 연수 수강 요약 정보")
             course_info = []
-            for course_type in ["사전진단", "사전워크숍", "원격연수", "집합연수", "컨퍼런스"]:
+            for course_type in ["사전진단", "사전워크숍", "원격연수", "집합연수", "콘퍼런스"]:
                 수강정보 = user.get(f"{course_type}_수강정보", "")
                 일자 = user.get(f"{course_type}_일자", "")
                 비고 = user.get(f"{course_type}_비고", "")
@@ -158,7 +164,7 @@ if st.button("📥 이수율 조회하기"):
                     </thead>
                     <tbody>
             """)
-            
+
             for t, info, date, note in course_info:
                 table_html += textwrap.dedent(f"""
                     <tr>
@@ -168,7 +174,7 @@ if st.button("📥 이수율 조회하기"):
                         <td style="padding:8px; border:1px solid #ccc;">{note}</td>
                     </tr>
                 """)
-            
+
             table_html += "</tbody></table>"
             st.markdown(table_html, unsafe_allow_html=True)
 
