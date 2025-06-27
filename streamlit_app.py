@@ -23,17 +23,25 @@ except Exception as e:
     st.stop()
 
 # ✅ 2줄 헤더 정제
+# ✅ 2줄 헤더 정제 (병합 셀 대응)
 multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
 multi_columns = []
 current_main = ""
+repeat_count = defaultdict(int)
+
 for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
-    if main:
-        current_main = main
-    if sub in ["", " "]:
-        multi_columns.append(current_main)
+    if main.strip():
+        current_main = main.strip()
+        repeat_count[current_main] = 1
     else:
-        multi_columns.append(f"{current_main}_{sub}")
+        repeat_count[current_main] += 1
+
+    if sub.strip():
+        multi_columns.append(f"{current_main}_{sub.strip()}")
+    else:
+        multi_columns.append(f"{current_main}_{repeat_count[current_main]}")
+
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
