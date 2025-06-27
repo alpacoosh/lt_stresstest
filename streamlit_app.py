@@ -148,37 +148,37 @@ if st.button("📥 이수율 조회하기"):
             ]
 
 
-            table_html = """
-            <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
-                <table style='border-collapse: collapse; width: 100%;'>
-                    <thead>
-                        <tr style="background-color:#eee;">
-                            <th style='padding:6px; text-align:center;'>연수 유형</th>
-                            <th style='padding:6px; text-align:center;'>차시</th>
-                            <th style='padding:6px; text-align:center;'>일정</th>
-                            <th style='padding:6px; text-align:left;'>비고</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            """
+                        
+            table_html = textwrap.dedent("""
+                <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
+                    <table style='border-collapse: collapse; width: 100%;'>
+                        <thead>
+                            <tr style="background-color:#eee;">
+                                <th style='padding:6px; text-align:center;'>연수 유형</th>
+                                <th style='padding:6px; text-align:center;'>차시</th>
+                                <th style='padding:6px; text-align:center;'>일정</th>
+                                <th style='padding:6px; text-align:left;'>비고</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            """)
             
             for title, a, b, c in info_blocks:
-                table_html += f"""
+                table_html += textwrap.dedent(f"""
                     <tr>
                         <td style='padding:6px; text-align:center;'>{title.strip()}</td>
                         <td style='padding:6px; text-align:center;'>{a.strip()}</td>
                         <td style='padding:6px; text-align:center;'>{b.strip()}</td>
                         <td style='padding:6px; text-align:left;'>{c.strip()}</td>
                     </tr>
-                """
+                """)
             
-            table_html += """
-                    </tbody>
-                </table>
-            </div>
-            """
+            table_html += textwrap.dedent("""
+                        </tbody>
+                    </table>
+                </div>
+            """)
             
-            # Streamlit에 출력
             st.markdown(table_html, unsafe_allow_html=True)
 
 
