@@ -34,8 +34,7 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
         multi_columns.append(f"{current_main}_{sub}")
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
-st.markdown("### 🏷️ 전체 컬럼명 리스트")
-st.write(list(data.columns))
+
 
 # ✅ 모든 연수 유형에 대해 상태 열 생성
 from collections import defaultdict
@@ -95,6 +94,10 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
+st.markdown("### 🏷️ 전체 컬럼명 리스트")
+st.write(list(data.columns))
+
 
 # ✅ 표 출력 함수 (모든 유형 상태 표시)
 def render_table(title, prefix, count):
