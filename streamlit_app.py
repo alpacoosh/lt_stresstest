@@ -92,12 +92,6 @@ def render_table(title, prefix, count):
     height = "28px"
 
     if prefix == "사전진단":
-    font_size = "0.7rem"
-    padding = "1px 6px"
-    min_width = "38px"
-    height = "28px"
-
-    if prefix == "사전진단":
         html = f"""
         <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
             <b style="font-size:0.95rem;">{title}</b>
