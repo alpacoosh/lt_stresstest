@@ -139,67 +139,6 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ✅ 연수 요약 테이블
-            st.markdown("### 🗓️ 연수 수강 정보 요약")
-            table_html = """
-            <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
-            <table style='border-collapse: collapse; width: 100%;'>
-            <thead>
-            <tr style="background-color:#eee;">
-                <th style='padding:6px; text-align:center;'>연수 유형</th>
-                <th style='padding:6px; text-align:center;'>차시</th>
-                <th style='padding:6px; text-align:center;'>일정</th>
-                <th style='padding:6px; text-align:left;'>비고</th>
-            </tr>
-            </thead>
-            <tbody>
-            """
-            # ✅ data에서 컬럼 87번부터 4개씩 그룹핑하여 가져오기
-            # ✅ 87번부터 4개씩 묶어서 한 줄씩 테이블로 출력
-            col_list = data.columns.tolist()
-            summary_columns = col_list[87:]
-            grouped = [summary_columns[i:i+4] for i in range(0, len(summary_columns), 4)]
-            
-            table_html = """
-            <div style='background-color:#f9f9f9; border-radius:10px; padding:1rem;'>
-            <table style='border-collapse: collapse; width: 100%;'>
-            <thead>
-            <tr style="background-color:#eee;">
-                <th style='padding:6px; text-align:center;'>연수 유형</th>
-                <th style='padding:6px; text-align:center;'>차시</th>
-                <th style='padding:6px; text-align:center;'>일정</th>
-                <th style='padding:6px; text-align:left;'>비고</th>
-            </tr>
-            </thead>
-            <tbody>
-            """
-            
-            for cols in grouped:
-                col1, col2, col3, col4 = cols
-                val1 = user[col1] if pd.isna(user[col1]) else str(user[col1]).strip()
-                val2 = user[col2] if pd.isna(user[col2]) else str(user[col2]).strip()
-                val3 = user[col3] if pd.isna(user[col3]) else str(user[col3]).strip()
-                val4 = user[col4] if pd.isna(user[col4]) else str(user[col4]).strip()
-            
-                table_html += f"""
-            <tr>
-                <td style='padding:6px; text-align:center;'>{val1}</td>
-                <td style='padding:6px; text-align:center;'>{val2}</td>
-                <td style='padding:6px; text-align:center;'>{val3}</td>
-                <td style='padding:6px; text-align:left;'>{val4}</td>
-            </tr>
-            """
-            
-            table_html += """
-            </tbody>
-            </table>
-            </div>
-            """
-            
-            st.markdown("### 🗓️ 연수 수강 정보 요약")
-            st.markdown(table_html, unsafe_allow_html=True)
-            
-
 
             # ✅ 차시별 테이블 출력
             col1, col2 = st.columns(2)
