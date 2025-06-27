@@ -97,14 +97,14 @@ def render_table(title, prefix, count):
             <b style="font-size:0.95rem;">{title}</b>
             <table style="border-collapse:collapse; width:100%; margin-top:0.3rem; text-align:center; font-size:{font_size};">
                 <tr>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold;">1차시</td>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold;">2차시</td>
+                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold; width:50%;">1차시</td>
+                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; font-weight:bold; width:50%;">2차시</td>
                 </tr>
                 <tr>
-                    <td style="border:1px solid black; padding:{padding}; height:{height};">{user.get(f'{prefix}_1차시', '')}</td>
-                    <td style="border:1px solid black; padding:{padding}; height:{height};">제출</td>
-                    <td style="border:1px solid black; padding:{padding}; height:{height};">{user.get(f'{prefix}_2차시', '')}</td>
-                    <td style="border:1px solid black; padding:{padding}; height:{height};">제출</td>
+                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.get(f'{prefix}_1차시', '')}</td>
+                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">제출</td>
+                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.get(f'{prefix}_2차시', '')}</td>
+                    <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">제출</td>
                 </tr>
                 <tr>
                     <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#ffe0b2;">이수</td>
