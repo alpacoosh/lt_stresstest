@@ -92,31 +92,26 @@ def render_table(title, prefix, count):
     height = "28px"
 
     if prefix == "사전진단":
-        # 3행 4열로 직접 지정 (1차시 제출, 1차시 상태, 2차시 제출, 2차시 상태)
         html = f"""
         <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
             <b style="font-size:0.95rem;">{title}</b>
             <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
                 <tr>
-                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
-                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>1차시</td>
-                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
-                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>제출</td>
-                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
-                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>2차시</td>
-                    <td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height};
-                               text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>제출</td>
+                    <td colspan="2" style='border:1px solid black; padding:{padding}; height:{height};
+                        text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>1차시</td>
+                    <td colspan="2" style='border:1px solid black; padding:{padding}; height:{height};
+                        text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>2차시</td>
                 </tr>
                 <tr>
-                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_1차시', '')}</td>
-                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_2차시', '')}</td>
-                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_4차시', '')}</td>
-                    <td style='border:1px solid black; padding:{padding}; text-align:center;'>{user.get(f'{prefix}_5차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>{user.get(f'{prefix}_1차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>제출</td>
+                    <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>{user.get(f'{prefix}_4차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center;'>제출</td>
                 </tr>
                 <tr>
-                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_3차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_2차시_상태', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'></td>
-                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_6차시', '')}</td>
+                    <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'>{user.get(f'{prefix}_5차시_상태', '')}</td>
                     <td style='border:1px solid black; padding:{padding}; background-color:#ffe0b2; text-align:center;'></td>
                 </tr>
             </table>
