@@ -36,7 +36,6 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
         multi_columns.append(f"{current_main}_{sub}")
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
-st.write("✅ 데이터 시트 컬럼 목록:", data.columns.tolist())  # ← 여기 추가
 data.reset_index(drop=True, inplace=True)
 # ✅ 상태 컬럼 생성
 type_status_counter = defaultdict(int)
