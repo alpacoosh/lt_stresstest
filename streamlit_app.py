@@ -91,7 +91,10 @@ submit2_col_idx = 6  # '사전진단' 제출2 컬럼 index
 complete2_col_idx = 7  # '사전진단' 이수2 컬럼 index
 
 def render_table(title, prefix, count):
-    font_size = "0.7rem"
+    if prefix == "원격연수":
+        font_size = "0.55rem"  # 더 작게 설정
+    else:
+        font_size = "0.7rem"
     padding = "1px 6px"
     height = "28px"
     min_width = "38px"
