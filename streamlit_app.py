@@ -210,7 +210,7 @@ if st.button("📥 이수율 조회하기"):
             st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
             st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
 
-            completed_sessions = int(user.get('총이수율', 0))
+            completed_sessions = int(user.get('총이수차시', 0))
             percent = round(completed_sessions / 40 * 100)
             st.markdown(f"""
 <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
