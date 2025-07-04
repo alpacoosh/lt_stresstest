@@ -121,8 +121,8 @@ def render_table(title, prefix, count):
                     <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.iloc[submit2_col_idx]}</td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#A9A9A9;">{user.iloc[complete1_col_idx]}</td>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#A9A9A9;">{user.iloc[complete2_col_idx]}</td>
+                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#E6E6E6;">{user.iloc[complete1_col_idx]}</td>
+                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#E6E6E6;">{user.iloc[complete2_col_idx]}</td>
                 </tr>
             </table>
         </div>
@@ -146,7 +146,7 @@ def render_table(title, prefix, count):
     ])
 
     return f"""
-    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
+    <div style="background-color:#E6E6E6; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
         <b style="font-size:0.95rem;">{title}</b>
         <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
             <tr>{headers}</tr>
