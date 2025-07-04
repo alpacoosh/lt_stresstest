@@ -141,7 +141,9 @@ def render_table(title, prefix, count):
     ])
     statuses = "".join([
         f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
-        f"font-size:{font_size}; vertical-align:middle; background-color:#E6E6E6;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+        f"font-size:{font_size}; vertical-align:middle; background-color:"
+        f"{'#FFE0B2' if prefix in ['사전진단', '원격연수', '집합연수'] else '#E6E6E6'};'>"
+        f"{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count + 1)
     ])
 
@@ -225,7 +227,7 @@ if st.button("📥 이수율 조회하기"):
             st.markdown(f"""
              <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
                  총 이수율 </br><p style="font-size:0.9rem;" >*사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.</p>
-                 {completed_sessions:02d}차시 / 40차시 
+                 {completed_sessions:02d}차시 / 32차시 
              </div>
              """, unsafe_allow_html=True)
 
