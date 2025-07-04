@@ -141,7 +141,7 @@ def render_table(title, prefix, count):
     ])
     statuses = "".join([
         f"<td style='border:1px solid black; padding:{padding}; height:{height}; text-align:center; "
-        f"font-size:{font_size}; vertical-align:middle; background-color:#f9f9f9;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
+        f"font-size:{font_size}; vertical-align:middle; background-color:#E6E6E6;'>{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count + 1)
     ])
 
