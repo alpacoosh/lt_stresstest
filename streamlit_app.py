@@ -208,7 +208,7 @@ if st.button("📥 이수율 조회하기"):
             with col1:
                 st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
             with col2:
-                st.markdown(render_table("② 사전워크숍 (3차시 / 150분)", "사전워크숍", 3), unsafe_allow_html=True)
+                st.markdown(render_table("② 사전워크숍 (3차시 / 150분) - KERIS 확인", "사전워크숍", 3), unsafe_allow_html=True)
             st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
             st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
             st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분)", "컨퍼런스", 5), unsafe_allow_html=True)
