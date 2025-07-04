@@ -121,8 +121,8 @@ def render_table(title, prefix, count):
                     <td style="border:1px solid black; padding:{padding}; height:{height}; width:25%;">{user.iloc[submit2_col_idx]}</td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#E6E6E6;">{user.iloc[complete1_col_idx]}</td>
-                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#E6E6E6;">{user.iloc[complete2_col_idx]}</td>
+                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#FFE0B2;">{user.iloc[complete1_col_idx]}</td>
+                    <td colspan="2" style="border:1px solid black; padding:{padding}; height:{height}; background-color:#FFE0B2;">{user.iloc[complete2_col_idx]}</td>
                 </tr>
             </table>
         </div>
