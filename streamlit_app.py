@@ -146,7 +146,7 @@ def render_table(title, prefix, count):
     ])
 
     return f"""
-    <div style="background-color:#E6E6E6; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
+    <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
         <b style="font-size:0.95rem;">{title}</b>
         <table style="border-collapse:collapse; width:100%; margin-top:0.3rem;">
             <tr>{headers}</tr>
