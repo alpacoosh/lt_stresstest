@@ -3,9 +3,6 @@ import gspread
 import pandas as pd
 from google.oauth2.service_account import Credentials
 from collections import defaultdict
-import threading
-import time
-import os
 
 # ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -15,51 +12,27 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-# ✅ 시트에서 데이터 가져오는 함수
-def fetch_sheet_data():
-    worksheet = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
+# ✅ 데이터 시트 불러오기 (캐시 적용)
+@st.cache_data(ttl=600)  # 10분(600초) 동안 캐싱
+def load_sheet_data():
+    worksheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
     rows = worksheet.get_all_values()
     return pd.DataFrame(rows)
 
-# ✅ 30분마다 Excel 업데이트하는 스레드 함수
-def update_excel_every_30_minutes():
-    while True:
-        try:
-            df = fetch_sheet_data()
-            df.to_csv("data.csv", index=False)
-            print("🔄 data.csv 파일 업데이트 완료")
-        except Exception as e:
-            print(f"❌ CSV 업데이트 오류: {e}")
-        time.sleep(1800)  # 30분
-
-# ✅ 스레드 시작
-threading.Thread(target=update_excel_every_30_minutes, daemon=True).start()
-
-# ✅ data.csv 파일이 없으면 시트에서 최초 저장
-if not os.path.exists("data.csv"):
-    try:
-        df = fetch_sheet_data()
-        df.to_csv("data.csv", index=False)
-        print("📥 최초 data.csv 저장 완료")
-    except Exception as e:
-        st.error(f"❌ 최초 CSV 생성 오류: {e}")
-        st.stop()
-
-# ✅ data.csv 파일 불러오기
+# ✅ 불러오기 시도
 try:
-    df_raw = pd.read_csv("data.csv", header=None)
+    df_raw = load_sheet_data()
 except Exception as e:
-    st.error(f"❌ data.csv 파일 로딩 중 오류: {e}")
+    st.error(f"❌ 구글 시트 접근 중 오류: {e}")
     st.stop()
 
+
 # ✅ 2줄 헤더 처리
-multi_header = df_raw.iloc[:2].fillna("")
+multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
 multi_columns = []
 current_main = ""
 for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
-    main = str(main)
-    sub = str(sub)
     if main:
         current_main = main
     if sub.strip() == "":
@@ -117,11 +90,6 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
-
-
-# ✅ 이하 사용자 검색 및 이수율 출력 로직 이어짐...
-
-
 
 submit1_col_idx = 3  # '사전진단' 제출1 컬럼 index
 complete1_col_idx = 4  # '사전진단' 이수1 컬럼 index
