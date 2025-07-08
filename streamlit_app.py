@@ -49,17 +49,19 @@ if not os.path.exists("data.xlsx"):
 
 # ✅ data.xlsx 파일 불러오기
 try:
-    df_raw = pd.read_excel("data.xlsx")
+    df_raw = pd.read_excel("data.xlsx", header=None)
 except Exception as e:
     st.error(f"❌ data.xlsx 파일 로딩 중 오류: {e}")
     st.stop()
 
 # ✅ 2줄 헤더 처리
-multi_header = df_raw.iloc[:2]
+multi_header = df_raw.iloc[:2].fillna("")
 data = df_raw.iloc[2:].copy()
 multi_columns = []
 current_main = ""
 for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
+    main = str(main)
+    sub = str(sub)
     if main:
         current_main = main
     if sub.strip() == "":
