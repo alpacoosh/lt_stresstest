@@ -14,7 +14,7 @@ client = gspread.authorize(credentials)
 
 # ✅ 데이터 시트 불러오기
 try:
-    worksheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
+    worksheet = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
     rows = worksheet.get_all_values()
     df_raw = pd.DataFrame(rows)
 except Exception as e:
