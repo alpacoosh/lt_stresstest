@@ -28,7 +28,7 @@ def update_excel_every_30_minutes():
             df = fetch_sheet_data()
             if os.path.exists("data.xlsx"):
                 os.remove("data.xlsx")
-            df.to_excel("data.xlsx", index=False)
+            df.to_excel("data.xlsx", index=False, engine='openpyxl')
             print("🔄 data.xlsx 파일 업데이트 완료")
         except Exception as e:
             print(f"❌ Excel 업데이트 오류: {e}")
@@ -41,7 +41,7 @@ threading.Thread(target=update_excel_every_30_minutes, daemon=True).start()
 if not os.path.exists("data.xlsx"):
     try:
         df = fetch_sheet_data()
-        df.to_excel("data.xlsx", index=False)
+        df.to_excel("data.xlsx", index=False, engine='openpyxl')
         print("📥 최초 data.xlsx 저장 완료")
     except Exception as e:
         st.error(f"❌ 최초 Excel 생성 오류: {e}")
@@ -49,7 +49,7 @@ if not os.path.exists("data.xlsx"):
 
 # ✅ data.xlsx 파일 불러오기
 try:
-    df_raw = pd.read_excel("data.xlsx", header=None)
+    df_raw = pd.read_excel("data.xlsx", header=None, engine='openpyxl')
 except Exception as e:
     st.error(f"❌ data.xlsx 파일 로딩 중 오류: {e}")
     st.stop()
