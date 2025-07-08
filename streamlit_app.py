@@ -15,13 +15,17 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
+# ✅ 시트에서 데이터 가져오는 함수
+def fetch_sheet_data():
+    worksheet = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
+    rows = worksheet.get_all_values()
+    return pd.DataFrame(rows)
+
 # ✅ 30분마다 Excel 업데이트하는 스레드 함수
 def update_excel_every_30_minutes():
     while True:
         try:
-            worksheet = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
-            rows = worksheet.get_all_values()
-            df = pd.DataFrame(rows)
+            df = fetch_sheet_data()
             if os.path.exists("data.xlsx"):
                 os.remove("data.xlsx")
             df.to_excel("data.xlsx", index=False)
@@ -32,6 +36,16 @@ def update_excel_every_30_minutes():
 
 # ✅ 스레드 시작
 threading.Thread(target=update_excel_every_30_minutes, daemon=True).start()
+
+# ✅ data.xlsx 파일이 없으면 시트에서 최초 저장
+if not os.path.exists("data.xlsx"):
+    try:
+        df = fetch_sheet_data()
+        df.to_excel("data.xlsx", index=False)
+        print("📥 최초 data.xlsx 저장 완료")
+    except Exception as e:
+        st.error(f"❌ 최초 Excel 생성 오류: {e}")
+        st.stop()
 
 # ✅ data.xlsx 파일 불러오기
 try:
