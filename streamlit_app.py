@@ -15,7 +15,7 @@ client = gspread.authorize(credentials)
 # ✅ 데이터 시트 불러오기 (캐시 적용)
 @st.cache_data(ttl=600)  # 10분(600초) 동안 캐싱
 def load_sheet_data():
-    worksheet = client.open_by_key("1owM9EXygtbj8EO-jYL5Lr1rixU-sT8LJ_h8k1aLnSTI").worksheet("시트4")
+    worksheet = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
     rows = worksheet.get_all_values()
     return pd.DataFrame(rows)
 
