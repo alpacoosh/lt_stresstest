@@ -52,6 +52,9 @@ except Exception as e:
     st.error(f"❌ data.csv 파일 로딩 중 오류: {e}")
     st.stop()
 
+
+print(df_raw)
+
 # ✅ 2줄 헤더 처리
 multi_header = df_raw.iloc[:2].fillna("")
 data = df_raw.iloc[2:].copy()
