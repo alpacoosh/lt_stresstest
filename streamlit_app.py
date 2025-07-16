@@ -247,23 +247,25 @@ if st.button("📥 이수율 조회하기"):
              </div>
              """, unsafe_allow_html=True)
 
-            # ✅ 하단 동의 버튼 중앙 정렬
-            st.markdown("""<div style='text-align:center; margin-top:2rem;'>""", unsafe_allow_html=True)
-            if st.button("📄 이수 내역 확인 동의", key="confirm_button"):
-                with st.modal("이수 내역 확인서"):
-                    st.write("아래 내용을 확인 후 '예' 또는 '아니오'를 선택해주세요.")
-                    st.markdown("""
-                    ✅ 본인은 위의 이수 내역을 확인하였으며,<br>
-                    표시된 정보에 대해 이의가 없음을 확인합니다.
-                    """, unsafe_allow_html=True)
+            # ✅ 하단 동의 버튼 중앙 정렬 (columns 사용)
+            col1, col2, col3 = st.columns([1, 2, 1])  # 가운데 col2가 더 넓음
+            
+            with col2:
+                if st.button("📄 이수 내역 확인 동의", key="confirm_button"):
+                    with st.modal("이수 내역 확인서"):
+                        st.write("아래 내용을 확인 후 '예' 또는 '아니오'를 선택해주세요.")
+                        st.markdown("""
+                        ✅ 본인은 위의 이수 내역을 확인하였으며,<br>
+                        표시된 정보에 대해 이의가 없음을 확인합니다.
+                        """, unsafe_allow_html=True)
+            
+                        confirmation = st.radio("확인 여부를 선택해주세요:", ["예", "아니오"], index=None, horizontal=True)
+            
+                        if confirmation == "예":
+                            st.success("✔️ 이수 내역에 이의 없음을 확인하셨습니다.")
+                        elif confirmation == "아니오":
+                            st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
 
-                    confirmation = st.radio("확인 여부를 선택해주세요:", ["예", "아니오"], index=None, horizontal=True)
-
-                    if confirmation == "예":
-                        st.success("✔️ 이수 내역에 이의 없음을 확인하셨습니다.")
-                    elif confirmation == "아니오":
-                        st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
-            st.markdown("</div>", unsafe_allow_html=True)
 
 
 
