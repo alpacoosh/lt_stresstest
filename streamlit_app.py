@@ -250,7 +250,7 @@ if st.button("📥 이수율 조회하기"):
                                 padding: 0.5rem 1rem;
                                 font-size: 0.9rem;
                                 cursor: pointer;
-                            " onclick="alert('test');">
+                             onclick="alert('test');">
                                 📄 이수 내역 확인 동의
                             </button>
                         </form>
