@@ -233,28 +233,8 @@ if st.button("📥 이수율 조회하기"):
 
             completed_sessions = int(user.get('총이수차시', 0))
             percent = round(completed_sessions / 40 * 100)
-#             st.markdown(f"""
-# <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
-#     총 이수율 *사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.<br>
-#     {completed_sessions:02d}차시 / 40차시 ({percent}%)
-# </div>
-# """, unsafe_allow_html=True)
 
-            st.markdown(f"""
-             <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
-                 총 이수율 </br><p style="font-size:0.9rem;" >*사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.</p>
-                 {completed_sessions:02d}차시 / 32차시 
-             </div>
-             """, unsafe_allow_html=True)
-
-#             st.markdown(f"""
-# <div style="margin-top:1rem; background-color:#f8d7da; padding:1rem; text-align:center; border-radius:10px; color:#721c24; font-weight:600;">
-#     📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
-# </div>
-# """, unsafe_allow_html=True)
-
-if st.button("📥 이수율 조회하기"):
-    if not name or not phone_last4:
+                if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
         row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
@@ -283,3 +263,5 @@ if st.button("📥 이수율 조회하기"):
                     elif confirmation == "아니오":
                         st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
             st.markdown("</div>", unsafe_allow_html=True)
+
+            
