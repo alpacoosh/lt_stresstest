@@ -233,12 +233,7 @@ if st.button("📥 이수율 조회하기"):
 
             completed_sessions = int(user.get('총이수차시', 0))
             percent = round(completed_sessions / 40 * 100)
-#             st.markdown(f"""
-# <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
-#     총 이수율 *사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.<br>
-#     {completed_sessions:02d}차시 / 40차시 ({percent}%)
-# </div>
-# """, unsafe_allow_html=True)
+
 
             st.markdown(f"""
              <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
