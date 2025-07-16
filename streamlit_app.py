@@ -202,12 +202,11 @@ if st.button("📥 이수율 조회하기"):
                    (data["전화번호뒷자리"] == st.session_state["input_phone"])]
         if len(row) == 0:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
-            st.session_state["query_completed"] = False  # 조회 실패 시 초기화
-
+            st.session_state["query_completed"] = False
         else:
             st.session_state["user_data"] = row.iloc[0]
             st.session_state["query_completed"] = True
-            st.rerun()
+            st.experimental_rerun()
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
             # ✅ 조회 성공 후 화면
             if st.session_state["query_completed"]:
