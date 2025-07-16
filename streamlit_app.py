@@ -255,30 +255,28 @@ if st.button("📥 이수율 조회하기"):
                 </div>
             """, unsafe_allow_html=True)
             
-            # ✅ 이수 내역 확인 동의 버튼 표시
-            if st.button("🔒 이수 내역 확인 동의"):
-                st.session_state["agree_clicked"] = True
-            
-            # ✅ 동의 버튼 클릭 후 표시될 영역
-            if st.session_state.get("agree_clicked"):
+            # ✅ 동의 버튼 표시
+            if not st.session_state["agree_clicked"]:
+                if st.button("🔒 이수 내역 확인 동의"):
+                    st.session_state["agree_clicked"] = True
+                    st.rerun()  # 버튼 누른 직후 rerun 필요
+            else:
                 st.markdown("""
-                <div style="margin-top:1.5rem; padding:1rem; background-color:#e0f7fa; border-radius:8px; text-align:center;">
-                    <p style="font-size:1rem; font-weight:600; margin-bottom:1rem;">
-                        📄 이수 내역에 이의 없음을 확인합니다.
-                    </p>
-                    <div style="display:flex; justify-content:center; gap:20px;">
-                        <form action="#" method="post">
-                            <button style="padding:0.4rem 1.2rem; font-size:0.9rem; background-color:#00796B; color:white; border:none; border-radius:5px; cursor:pointer;">
-                                YES
-                            </button>
-                        </form>
-                        <form action="#" method="post">
-                            <button style="padding:0.4rem 1.2rem; font-size:0.9rem; background-color:#B71C1C; color:white; border:none; border-radius:5px; cursor:pointer;">
-                                NO
-                            </button>
-                        </form>
+                    <div style="margin-top:1.5rem; padding:1rem; background-color:#e0f7fa; border-radius:8px; text-align:center;">
+                        <p style="font-size:1rem; font-weight:600; margin-bottom:1rem;">
+                            📄 이수 내역에 이의 없음을 확인합니다.
+                        </p>
                     </div>
-                </div>
                 """, unsafe_allow_html=True)
+            
+                col_yes, col_no = st.columns(2)
+                with col_yes:
+                    if st.button("✅ YES"):
+                        st.session_state["agree_final"] = "yes"
+                        st.success("감사합니다. 이수 내역이 확정되었습니다.")
+                with col_no:
+                    if st.button("❌ NO"):
+                        st.session_state["agree_final"] = "no"
+                        st.warning("이수 내역에 이의가 있음을 선택하셨습니다.")
 
            
