@@ -163,6 +163,9 @@ def render_table(title, prefix, count, user):
     </div>
     """
 
+st.write("컬럼 종류:", list(data.columns))
+
+
 # 조회 버튼
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
