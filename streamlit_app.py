@@ -80,7 +80,7 @@ st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양
 # ✅ 제목 박스 아래 로고 정렬
 st.markdown("""
 <div style="text-align:center; margin-top:-1.5rem; margin-bottom:2rem;">
-    <img src="https://raw.githubusercontent.com/alpacoosh/lt_stresstest/main/logo.png" style="max-width:200px;">
+    <img src="https://raw.githubusercontent.com/alpacoosh/lt_stresstest/main/logo.png" style="max-width:300px;">
 </div>
 """, unsafe_allow_html=True)
 
