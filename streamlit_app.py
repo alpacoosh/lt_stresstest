@@ -236,30 +236,43 @@ if st.button("📥 이수율 조회하기"):
 
 
             st.markdown(f"""
-             <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
-                 총 이수율 </br><p style="font-size:0.9rem;" >*사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.</p>
-                 {completed_sessions:02d}차시 / 32차시 
-             </div>
-             """, unsafe_allow_html=True)
-
-            # ✅ 하단 동의 버튼 중앙 정렬 (columns 사용)
-            col1, col2, col3 = st.columns([1, 2, 1])  # 가운데 col2가 더 넓음
+                <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
+                    총 이수율<br>
+                    <p style="font-size:0.9rem;">*사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.</p>
+                    {completed_sessions:02d}차시 / 32차시
+                    <div style="margin-top: 1.2rem;">
+                        <form action="" method="post">
+                            <button type="submit" style="
+                                background-color: white;
+                                color: black;
+                                border: 1px solid #ccc;
+                                border-radius: 6px;
+                                padding: 0.5rem 1rem;
+                                font-size: 0.9rem;
+                                cursor: pointer;
+                            " onclick="document.getElementById('confirm-button-clicked').click(); return false;">
+                                📄 이수 내역 확인 동의
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
             
-            with col2:
-                if st.button("📄 이수 내역 확인 동의", key="confirm_button"):
-                    with st.modal("이수 내역 확인서"):
-                        st.write("아래 내용을 확인 후 '예' 또는 '아니오'를 선택해주세요.")
-                        st.markdown("""
-                        ✅ 본인은 위의 이수 내역을 확인하였으며,<br>
-                        표시된 정보에 대해 이의가 없음을 확인합니다.
-                        """, unsafe_allow_html=True)
+            # 이 버튼은 숨겨진 Streamlit용 트리거
+            if st.button("📄 이수 내역 확인 동의", key="confirm-button-clicked"):
+                with st.modal("이수 내역 확인서"):
+                    st.write("아래 내용을 확인 후 '예' 또는 '아니오'를 선택해주세요.")
+                    st.markdown("""
+                    ✅ 본인은 위의 이수 내역을 확인하였으며,<br>
+                    표시된 정보에 대해 이의가 없음을 확인합니다.
+                    """, unsafe_allow_html=True)
             
-                        confirmation = st.radio("확인 여부를 선택해주세요:", ["예", "아니오"], index=None, horizontal=True)
+                    confirmation = st.radio("확인 여부를 선택해주세요:", ["예", "아니오"], index=None, horizontal=True)
             
-                        if confirmation == "예":
-                            st.success("✔️ 이수 내역에 이의 없음을 확인하셨습니다.")
-                        elif confirmation == "아니오":
-                            st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
+                    if confirmation == "예":
+                        st.success("✔️ 이수 내역에 이의 없음을 확인하셨습니다.")
+                    elif confirmation == "아니오":
+                        st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
 
 
 
