@@ -12,18 +12,22 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-@st.cache_data(ttl=300)
+# ✅ 데이터 시트 불러오기 (캐시 적용)
+@st.cache_data(ttl=300)  # 10분(600초) 동안 캐싱
 def load_sheet_data():
     worksheet = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
     rows = worksheet.get_all_values()
     return pd.DataFrame(rows)
 
+# ✅ 불러오기 시도
 try:
     df_raw = load_sheet_data()
 except Exception as e:
     st.error(f"❌ 구글 시트 접근 중 오류: {e}")
     st.stop()
 
+
+# ✅ 2줄 헤더 처리
 multi_header = df_raw.iloc[:2]
 data = df_raw.iloc[2:].copy()
 multi_columns = []
@@ -38,6 +42,7 @@ for main, sub in zip(multi_header.iloc[0], multi_header.iloc[1]):
 data.columns = multi_columns
 data.reset_index(drop=True, inplace=True)
 
+# ✅ 상태 컬럼 생성
 type_status_counter = defaultdict(int)
 for idx, col in enumerate(data.columns):
     if "_" not in col and col not in ["이름", "전화번호뒷자리", "총이수율", "총이수율(%)", "이수여부"]:
@@ -46,6 +51,7 @@ for idx, col in enumerate(data.columns):
         if base_col in data.columns:
             data[f"{base_col}_상태"] = data.iloc[:, idx]
 
+# ✅ UI 세팅
 st.set_page_config(page_title="이수율 확인 시스템", layout="centered")
 st.markdown("""
 <style>
@@ -71,15 +77,20 @@ st.markdown("""
 
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
 
+# ✅ 제목 박스 아래 로고 정렬
 st.markdown("""
 <div style="text-align:center; margin-top:-1.5rem; margin-bottom:2rem;">
     <img src="https://raw.githubusercontent.com/alpacoosh/lt_stresstest/main/logo.png" style="max-width:300px;">
 </div>
 """, unsafe_allow_html=True)
 
+
+
+# ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
 phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
 
+# ✅ 수료 기준 안내
 st.markdown("""
 <div style="background-color:#fffbe6; border-left: 5px solid #ffc107; padding: 1.2rem 1.5rem; margin: 1.5rem 0 1rem 0; border-radius: 8px;">
     <p style="margin: 0; font-size: 1rem; line-height: 1.5;">
@@ -90,28 +101,27 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 🟢 세션 상태값 초기화
-if "info_showed" not in st.session_state:
-    st.session_state["info_showed"] = False
-if "agree_clicked" not in st.session_state:
-    st.session_state["agree_clicked"] = False
-if "confirm_status" not in st.session_state:
-    st.session_state["confirm_status"] = None  # "YES", "NO", None
+submit1_col_idx = 3  # '사전진단' 제출1 컬럼 index
+complete1_col_idx = 4  # '사전진단' 이수1 컬럼 index
+submit2_col_idx = 6  # '사전진단' 제출2 컬럼 index
+complete2_col_idx = 7  # '사전진단' 이수2 컬럼 index
 
 def render_table(title, prefix, count):
     if prefix == "원격연수":
-        font_size = "0.55rem"
+        font_size = "0.55rem"  # 더 작게 설정
     else:
         font_size = "0.7rem"
     padding = "1px 6px"
     height = "28px"
     min_width = "38px"
 
+    # 사전진단 테이블은 별도 처리
     if prefix == "사전진단":
-        submit1_col_idx = 3
-        complete1_col_idx = 4
-        submit2_col_idx = 6
-        complete2_col_idx = 7
+        submit1_col_idx = 3  # 사전진단 제출1 컬럼 인덱스
+        complete1_col_idx = 4 # 사전진단 이수1 컬럼 인덱스
+        submit2_col_idx = 6  # 사전진단 제출2 컬럼 인덱스
+        complete2_col_idx = 7 # 사전진단 이수2 컬럼 인덱스
+
         html = f"""
         <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
             <b style="font-size:0.95rem;">{title}</b>
@@ -134,7 +144,7 @@ def render_table(title, prefix, count):
         </div>
         """
         return html
-
+    # 기존 테이블 구조 유지 (나머지 연수)
     headers = "".join([
         f"<td style='border:1px solid black; padding:{padding}; min-width:{min_width}; height:{height}; "
         f"text-align:center; font-size:{font_size}; vertical-align:middle; font-weight:bold;'>{i}차시</td>"
@@ -152,6 +162,7 @@ def render_table(title, prefix, count):
         f"{user.get(f'{prefix}_{i}차시_상태', '')}</td>"
         for i in range(1, count + 1)
     ])
+
     return f"""
     <div style="background-color:#f9f9f9; border-radius:10px; padding:0.6rem; margin-bottom:1rem;">
         <b style="font-size:0.95rem;">{title}</b>
@@ -163,96 +174,76 @@ def render_table(title, prefix, count):
     </div>
     """
 
-# 🟢 버튼/동의 확인 분기 로직
+# ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
-        st.session_state["info_showed"] = False
     else:
         row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
         if len(row) == 0:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
-            st.session_state["info_showed"] = False
         else:
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
-            st.session_state["info_showed"] = True
-            st.session_state["agree_clicked"] = False
-            st.session_state["confirm_status"] = None  # YES/NO 선택 리셋
 
-# 🟢 정보가 조회된 경우에만 출력
-if st.session_state.get("info_showed"):
-    # ---- 이수 정보 출력 ----
-    summary_fields = [
-        ("사전진단", 88, 89, 90),
-        ("사전워크숍", 92, 93, 94),
-        ("원격연수", 96, 97, 98),
-        ("집합연수", 100, 101, 102),
-        ("컨퍼런스", 104, 105, 106)
-    ]
+            summary_fields = [
+                ("사전진단", 88, 89, 90),
+                ("사전워크숍", 92, 93, 94),
+                ("원격연수", 96, 97, 98),
+                ("집합연수", 100, 101, 102),
+                ("컨퍼런스", 104, 105, 106)
+            ]
 
-    summary_table_html = f"""
-    <div style="margin-top:2rem; background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
-    <h4 style="font-weight:600; color:#003366; font-size:1rem;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
-    <table style="border-collapse: collapse; width: 100%; font-size: 0.7rem; text-align: center; margin-top: 0.5rem;">
-    <tr style=" color:black;">
-        <th style="border: 1px solid black; padding: 6px;">연수유형</th>
-        <th style="border: 1px solid black; padding: 6px;">수강 정보</th>
-        <th style="border: 1px solid black; padding: 6px;">일자</th>
-        <th style="border: 1px solid black; padding: 6px;">비고</th>
-    </tr>
-    """
-    for label, col_sugang, col_date, col_note in summary_fields:
-        summary_table_html += f"""
-    <tr>
-        <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{label}</td>
-        <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{user.iloc[col_sugang]}</td>
-        <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{user.iloc[col_date]}</td>
-        <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{user.iloc[col_note]}</td>
-    </tr>
-    """
-    summary_table_html += """
-    </table>
-    </div>
-    """
-    st.markdown(summary_table_html, unsafe_allow_html=True)
+            summary_table_html = f"""
+            <div style="margin-top:2rem; background-color:#f9f9f9; border-radius:10px; padding:0.8rem; margin-bottom:1.2rem;">
+            <h4 style="font-weight:600; color:#003366; font-size:1rem;">📘 {user['이름']} 선생님의 연수 수강 정보</h4>
+            <table style="border-collapse: collapse; width: 100%; font-size: 0.7rem; text-align: center; margin-top: 0.5rem;">
+            <tr style=" color:black;">
+                <th style="border: 1px solid black; padding: 6px;">연수유형</th>
+                <th style="border: 1px solid black; padding: 6px;">수강 정보</th>
+                <th style="border: 1px solid black; padding: 6px;">일자</th>
+                <th style="border: 1px solid black; padding: 6px;">비고</th>
+            </tr>
+            """
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
-    with col2:
-        st.markdown(render_table("② 사전워크숍 (3차시 / 150분) - KERIS 확인", "사전워크숍", 3), unsafe_allow_html=True)
-    st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
-    st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
-    st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분) - KERIS 확인", "컨퍼런스", 5), unsafe_allow_html=True)
+            for label, col_sugang, col_date, col_note in summary_fields:
+                summary_table_html += f"""
+            <tr>
+                <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{label}</td>
+                <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{user.iloc[col_sugang]}</td>
+                <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{user.iloc[col_date]}</td>
+                <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">{user.iloc[col_note]}</td>
+            </tr>
+            """
 
-    completed_sessions = int(user.get('총이수차시', 0))
-    percent = round(completed_sessions / 40 * 100)
+            summary_table_html += """
+            </table>
+            </div>
+            """
+            st.markdown(summary_table_html, unsafe_allow_html=True)
 
-    st.markdown(f"""
-        <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
-            총 이수율<br>
-            <p style="font-size:0.9rem;">*사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.</p>
-            {completed_sessions:02d}차시 / 32차시
-        </div>
-    """, unsafe_allow_html=True)
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
+            with col2:
+                st.markdown(render_table("② 사전워크숍 (3차시 / 150분) - KERIS 확인", "사전워크숍", 3), unsafe_allow_html=True)
+            st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
+            st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
+            st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분) - KERIS 확인", "컨퍼런스", 5), unsafe_allow_html=True)
 
-    # 🟢 동의 버튼, YES/NO 버튼 노출 (분기 처리)
-    if not st.session_state.get("agree_clicked"):
-        if st.button("이수 내역 확인 동의"):
-            st.session_state["agree_clicked"] = True
-    else:
-        st.info("이수 내역에 이의 없음을 확인합니다.")
-        col_yes, col_no = st.columns([1,1])
-        with col_yes:
-            if st.button("YES"):
-                st.session_state["confirm_status"] = "YES"
-        with col_no:
-            if st.button("NO"):
-                st.session_state["confirm_status"] = "NO"
+            completed_sessions = int(user.get('총이수차시', 0))
+            percent = round(completed_sessions / 40 * 100)
 
-        # YES/NO 클릭 시 안내 메시지만 하단에 표시
-        if st.session_state["confirm_status"] == "YES":
-            st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
-        elif st.session_state["confirm_status"] == "NO":
-            st.warning("동의하지 않으셨습니다. 문의사항은 운영팀에 연락해주세요.")
+
+            # ✅ 상태 저장용 변수
+            agree = st.session_state.get("agree_clicked", False)
+            
+            # ✅ 총 이수율 영역 출력
+            st.markdown(f"""
+                <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
+                    총 이수율<br>
+                    <p style="font-size:0.9rem;">*사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.</p>
+                    {completed_sessions:02d}차시 / 32차시
+                </div>
+            """, unsafe_allow_html=True)
+            
