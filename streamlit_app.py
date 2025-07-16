@@ -75,6 +75,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
+# ✅ 로고 삽입 (제목 하단)
+st.markdown("""
+<div style="text-align:center; margin-top:-1.2rem; margin-bottom:2rem;">
+    <img src="https://drive.google.com/uc?export=view&id=1bQ05bcKJkDOS4B9_lDDhcgE4lXsFNkqL" alt="로고" style="max-width:200px;">
+</div>
+""", unsafe_allow_html=True)
 
 # ✅ 사용자 입력
 name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
