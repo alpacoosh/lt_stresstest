@@ -12,7 +12,7 @@ credentials = Credentials.from_service_account_info(
 )
 client = gspread.authorize(credentials)
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=5)
 def load_sheet_data():
     worksheet = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
     rows = worksheet.get_all_values()
