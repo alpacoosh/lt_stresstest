@@ -252,3 +252,21 @@ if st.button("📥 이수율 조회하기"):
 #     📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
 # </div>
 # """, unsafe_allow_html=True)
+
+
+# ✅ 이수 내역 확인 동의 버튼
+if st.button("📄 이수 내역 확인 동의"):
+    with st.modal("이수 내역 확인서"):
+        st.write("아래 내용을 확인 후 '예' 또는 '아니오'를 선택해주세요.")
+        st.markdown("""
+        ✅ 본인은 위의 이수 내역을 확인하였으며,<br>
+        표시된 정보에 대해 이의가 없음을 확인합니다.
+        """, unsafe_allow_html=True)
+
+        confirmation = st.radio("확인 여부를 선택해주세요:", ["예", "아니오"], index=None, horizontal=True)
+
+        if confirmation == "예":
+            st.success("✔️ 이수 내역에 이의 없음을 확인하셨습니다.")
+        elif confirmation == "아니오":
+            st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
+
