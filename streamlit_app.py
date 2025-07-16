@@ -237,28 +237,25 @@ if user is not None:
     """, unsafe_allow_html=True)
 
     if not st.session_state["agree_clicked"]:
-        # 버튼을 넓게, 중앙에 두고 싶으면 columns([1, 6, 1])처럼 중간을 넓게!
-        center1, center2, center3 = st.columns([1, 6, 1])
-        with center2:
+        c1, c2, c3 = st.columns([1, 6, 1])
+        with c2:
             if st.button("이수 내역 확인 동의", key="agree_btn"):
                 st.session_state["agree_clicked"] = True
     
     if st.session_state["agree_clicked"]:
         st.info("이수 내역에 이의 없음을 확인합니다.")
-    
-        # YES/NO를 오른쪽에 정렬 (왼쪽은 비우고, 오른쪽 두 칸에 YES/NO)
-        right1, right2, right3 = st.columns([7, 1, 1])
-        with right2:
+        r1, r2, r3 = st.columns([7, 1, 1])
+        with r2:
             if st.button("YES", key="yes_btn"):
                 st.session_state["confirm_status"] = "YES"
-        with right3:
+        with r3:
             if st.button("NO", key="no_btn"):
                 st.session_state["confirm_status"] = "NO"
-    
         if st.session_state["confirm_status"] == "YES":
             st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
         elif st.session_state["confirm_status"] == "NO":
             st.warning("동의하지 않으셨습니다. 문의사항은 운영팀에 연락해주세요.")
+
 
 
 
