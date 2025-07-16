@@ -257,9 +257,11 @@ if st.button("📥 이수율 조회하기"):
             
             # ✅ 동의 버튼 표시
             if not st.session_state["agree_clicked"]:
-                if st.button("🔒 이수 내역 확인 동의"):
+                st.button("🔒 이수 내역 확인 동의", key="agree_button")
+            
+                if st.session_state.get("agree_button"):
                     st.session_state["agree_clicked"] = True
-                    st.rerun()  # 버튼 누른 직후 rerun 필요
+                    st.experimental_rerun()
             else:
                 st.markdown("""
                     <div style="margin-top:1.5rem; padding:1rem; background-color:#e0f7fa; border-radius:8px; text-align:center;">
