@@ -237,7 +237,7 @@ if user is not None:
     """, unsafe_allow_html=True)
 
     if not st.session_state["agree_clicked"]:
-        center1, center2, center3 = st.columns([1, 1, 1])
+        center1, center2, center3 = st.columns([1, 6, 1])
         with center2:
             if st.button("이수 내역 확인 동의", key="agree_btn"):
                 st.session_state["agree_clicked"] = True
