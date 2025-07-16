@@ -10,6 +10,10 @@ if "input_name" not in st.session_state:
 if "input_phone" not in st.session_state:
     st.session_state["input_phone"] = ""
 
+if "query_completed" not in st.session_state:
+    st.session_state["query_completed"] = False
+
+
 # ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_info(
@@ -198,10 +202,16 @@ if st.button("📥 이수율 조회하기"):
                    (data["전화번호뒷자리"] == st.session_state["input_phone"])]
         if len(row) == 0:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
-        else:
-            user = row.iloc[0]
-            st.success(f"✅ {user['이름']} 선생님의 이수 정보")
+            st.session_state["query_completed"] = False  # 조회 실패 시 초기화
 
+        else:
+            st.session_state["user_data"] = row.iloc[0]
+            st.session_state["query_completed"] = True
+            st.rerun()
+            st.success(f"✅ {user['이름']} 선생님의 이수 정보")
+            # ✅ 조회 성공 후 화면
+            if st.session_state["query_completed"]:
+                user = st.session_state["user_data"]
             summary_fields = [
                 ("사전진단", 88, 89, 90),
                 ("사전워크숍", 92, 93, 94),
