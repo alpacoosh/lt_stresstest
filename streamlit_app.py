@@ -247,24 +247,30 @@ if st.button("📥 이수율 조회하기"):
                 </div>
             """, unsafe_allow_html=True)
             
-            # ✅ 동의 버튼 및 확인 문구 처리
+
+            # ✅ 동의 상태 초기화
             if "agree_clicked" not in st.session_state:
                 st.session_state["agree_clicked"] = False
-
-            if not st.session_state["agree_clicked"]:
-                if st.button("이수 내역 확인 동의"):
-                    st.session_state["agree_clicked"] = True
-
+            
+            # ✅ 버튼을 가운데 배치하려면 columns 사용
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                if not st.session_state["agree_clicked"]:
+                    if st.button("📝 이수 내역 확인 동의"):
+                        st.session_state["agree_clicked"] = True
+            
+            # ✅ 동의 후 안내 메시지 + 예/아니요 버튼 표시 (중앙 정렬)
             if st.session_state["agree_clicked"]:
                 st.markdown("""
-                    <div style="margin-top:2rem; padding:1rem; background-color:#f1f1f1; border-radius:8px; text-align:center;">
-                        <p style="font-weight:600; font-size:1rem;">📝 이수내역에 이의 없음을 확인합니다.</p>
-                        <div style="margin-top:1rem;">
-                            <button style="padding:6px 14px; font-size:0.9rem; margin-right:10px;">✅ 예</button>
-                            <button style="padding:6px 14px; font-size:0.9rem;">❌ 아니요</button>
-                        </div>
+                    <div style="margin-top:2rem; padding:1.5rem; background-color:#f9f9f9; border-radius:10px; text-align:center;">
+                        <p style="font-weight:600; font-size:1rem;">이수내역에 이의 없음을 확인합니다.</p>
                     </div>
                 """, unsafe_allow_html=True)
             
-    
+                col4, col5, col6 = st.columns([1, 1, 1])
+                with col4:
+                    st.button("✅ 예")
+                with col6:
+                    st.button("❌ 아니요")
+                
 
