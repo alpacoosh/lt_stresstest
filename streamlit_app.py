@@ -253,21 +253,33 @@ if st.button("📥 이수율 조회하기"):
 # </div>
 # """, unsafe_allow_html=True)
 
-# ✅ 하단 동의 버튼 중앙 정렬
-st.markdown("""<div style='text-align:center; margin-top:2rem;'>""", unsafe_allow_html=True)
-if st.button("📄 이수 내역 확인 동의", key="confirm_button"):
-    with st.modal("이수 내역 확인서"):
-        st.write("아래 내용을 확인 후 '예' 또는 '아니오'를 선택해주세요.")
-        st.markdown("""
-        ✅ 본인은 위의 이수 내역을 확인하였으며,<br>
-        표시된 정보에 대해 이의가 없음을 확인합니다.
-        """, unsafe_allow_html=True)
+if st.button("📥 이수율 조회하기"):
+    if not name or not phone_last4:
+        st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
+    else:
+        row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
+        if len(row) == 0:
+            st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
+        else:
+            user = row.iloc[0]
+            st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-        confirmation = st.radio("확인 여부를 선택해주세요:", ["예", "아니오"], index=None, horizontal=True)
+            # ... 이수 테이블 등 출력 코드 ...
 
-        if confirmation == "예":
-            st.success("✔️ 이수 내역에 이의 없음을 확인하셨습니다.")
-        elif confirmation == "아니오":
-            st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
-st.markdown("</div>", unsafe_allow_html=True)
+            # ✅ 동의 버튼 중앙 정렬로 보여주기
+            st.markdown("<div style='text-align:center; margin-top:2rem;'>", unsafe_allow_html=True)
+            if st.button("📄 이수 내역 확인 동의", key="confirm_button"):
+                with st.modal("이수 내역 확인서"):
+                    st.write("아래 내용을 확인 후 '예' 또는 '아니오'를 선택해주세요.")
+                    st.markdown("""
+                    ✅ 본인은 위의 이수 내역을 확인하였으며,<br>
+                    표시된 정보에 대해 이의가 없음을 확인합니다.
+                    """, unsafe_allow_html=True)
 
+                    confirmation = st.radio("확인 여부를 선택해주세요:", ["예", "아니오"], index=None, horizontal=True)
+
+                    if confirmation == "예":
+                        st.success("✔️ 이수 내역에 이의 없음을 확인하셨습니다.")
+                    elif confirmation == "아니오":
+                        st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
+            st.markdown("</div>", unsafe_allow_html=True)
