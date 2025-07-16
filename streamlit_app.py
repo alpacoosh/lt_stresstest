@@ -237,15 +237,15 @@ if user is not None:
     """, unsafe_allow_html=True)
 
     if not st.session_state["agree_clicked"]:
-        c1, c2, c3 = st.columns([1, 6, 1])
+        c1, c2, c3 = st.columns([2, 3, 2])
         with c2:
-            if st.button("이수 내역 확인 동의", key="agree_btn", use_container_width=True):
+            if st.button("이수 내역 확인 동의", key="agree_btn"):
                 st.session_state["agree_clicked"] = True
     
     if st.session_state["agree_clicked"]:
         st.info("이수 내역에 이의 없음을 확인합니다.")
         # YES/NO 오른쪽 끝에만 배치
-        r1, r2, r3 = st.columns([10, 1, 1])
+        r1, r2, r3 = st.columns([8, 1, 1])
         with r2:
             if st.button("YES", key="yes_btn"):
                 st.session_state["confirm_status"] = "YES"
