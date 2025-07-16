@@ -247,27 +247,6 @@ if st.button("📥 이수율 조회하기"):
              </div>
              """, unsafe_allow_html=True)
 
-#             st.markdown(f"""
-# <div style="margin-top:1rem; background-color:#f8d7da; padding:1rem; text-align:center; border-radius:10px; color:#721c24; font-weight:600;">
-#     📌 <b>{'이수' if user.get('이수여부') == '이수' else '미이수'}</b>
-# </div>
-# """, unsafe_allow_html=True)
-
-
-# ✅ 이수율 조회
-if st.button("📥 이수율 조회하기"):
-    if not name or not phone_last4:
-        st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
-    else:
-        row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
-        if len(row) == 0:
-            st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
-        else:
-            user = row.iloc[0]
-            st.success(f"✅ {user['이름']} 선생님의 이수 정보")
-
-            # ... 이수 상세 테이블 코드 유지 ...
-
             # ✅ 하단 동의 버튼 중앙 정렬
             st.markdown("""<div style='text-align:center; margin-top:2rem;'>""", unsafe_allow_html=True)
             if st.button("📄 이수 내역 확인 동의", key="confirm_button"):
@@ -285,3 +264,6 @@ if st.button("📥 이수율 조회하기"):
                     elif confirmation == "아니오":
                         st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
             st.markdown("</div>", unsafe_allow_html=True)
+
+
+
