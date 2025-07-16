@@ -239,6 +239,9 @@ if user is not None:
         </div>
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
+
+    st.write("서명 실제 값:", repr(user.get("서명", "")))
+
     # ✅ 서명 값이 TRUE면 동의 관련 UI 숨김
     if user.get("서명", "").strip().upper() == "TRUE":
         st.info("이미 이수 내역 확인 동의를 완료하셨습니다.")
