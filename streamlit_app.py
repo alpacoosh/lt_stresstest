@@ -76,7 +76,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
 
-st.image("/mnt/data/80b4f68a-4f5d-4f20-9297-527d59f60bb3.png", width=200)
+st.image("https://raw.githubusercontent.com/alpacoosh/lt_stresstest/main/logo.png", width=200)
 
 
 # ✅ 사용자 입력
