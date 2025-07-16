@@ -236,25 +236,48 @@ if user is not None:
         </div>
     """, unsafe_allow_html=True)
 
-    if not st.session_state["agree_clicked"]:
-        c1, c2, c3 = st.columns([1, 6, 1])
-        with c2:
-            if st.button("이수 내역 확인 동의", key="agree_btn"):
-                st.session_state["agree_clicked"] = True
+    # 중앙 버튼(꽉찬 width + 중앙정렬)
+    c1, c2, c3 = st.columns([1, 6, 1])
+    with c2:
+        btn = st.button("이수 내역 확인 동의", key="agree_btn", use_container_width=True)
+    if btn:
+        st.session_state["agree_clicked"] = True
     
+    # YES/NO 완전 우측정렬
     if st.session_state["agree_clicked"]:
         st.info("이수 내역에 이의 없음을 확인합니다.")
-        r1, r2, r3 = st.columns([7, 1, 1])
-        with r2:
+        st.markdown("""
+            <div style="display:flex; justify-content:flex-end; gap:16px; margin-right:6px;">
+                <form action="" method="post" style="display:inline;">
+                    <button type="submit" name="yes"
+                    style="width:80px;padding:10px 0;font-size:1.1rem;
+                    border-radius:8px;border:2px solid #003366;background:#fff;color:#003366;cursor:pointer;">YES</button>
+                </form>
+                <form action="" method="post" style="display:inline;">
+                    <button type="submit" name="no"
+                    style="width:80px;padding:10px 0;font-size:1.1rem;
+                    border-radius:8px;border:2px solid #003366;background:#fff;color:#003366;cursor:pointer;">NO</button>
+                </form>
+            </div>
+        """, unsafe_allow_html=True)
+        # 버튼 클릭 감지는 따로 st.button YES/NO도 만들어서 처리해야 함
+    
+        yes = st.session_state.get("confirm_status") == "YES"
+        no = st.session_state.get("confirm_status") == "NO"
+    
+        # (아래처럼 Streamlit 버튼도 만들어서 동작 보장)
+        colA, colB, colC, colD, colE, colF, colG, colH, colI, colJ = st.columns([6,1,0.2,1,1,1,1,1,1,1])
+        with colI:
             if st.button("YES", key="yes_btn"):
                 st.session_state["confirm_status"] = "YES"
-        with r3:
+        with colJ:
             if st.button("NO", key="no_btn"):
                 st.session_state["confirm_status"] = "NO"
         if st.session_state["confirm_status"] == "YES":
             st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
         elif st.session_state["confirm_status"] == "NO":
             st.warning("동의하지 않으셨습니다. 문의사항은 운영팀에 연락해주세요.")
+
 
 
 
