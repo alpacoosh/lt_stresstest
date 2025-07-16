@@ -174,6 +174,14 @@ def render_table(title, prefix, count):
     </div>
     """
 
+if "agree_clicked" not in st.session_state:
+    st.session_state["agree_clicked"] = False
+
+if "agree_final" not in st.session_state:
+    st.session_state["agree_final"] = None  # YES 또는 NO
+
+
+
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
