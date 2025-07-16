@@ -4,6 +4,12 @@ import pandas as pd
 from google.oauth2.service_account import Credentials
 from collections import defaultdict
 
+if "input_name" not in st.session_state:
+    st.session_state["input_name"] = ""
+
+if "input_phone" not in st.session_state:
+    st.session_state["input_phone"] = ""
+
 # ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_info(
@@ -87,8 +93,9 @@ st.markdown("""
 
 
 # ✅ 사용자 입력
-name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
-phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
+st.text_input("👤 이름을 입력하세요: ", key="input_name", placeholder="예: 홍길동")
+st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, key="input_phone", placeholder="예: 1234")
+
 
 # ✅ 수료 기준 안내
 st.markdown("""
@@ -184,10 +191,11 @@ if "agree_final" not in st.session_state:
 
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
-    if not name or not phone_last4:
+    if not st.session_state["input_name"] or not st.session_state["input_phone"]:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
-        row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
+        row = data[(data["이름"] == st.session_state["input_name"]) & 
+                   (data["전화번호뒷자리"] == st.session_state["input_phone"])]
         if len(row) == 0:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
         else:
