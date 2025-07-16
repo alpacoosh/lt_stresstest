@@ -235,28 +235,31 @@ if st.button("📥 이수율 조회하기"):
             percent = round(completed_sessions / 40 * 100)
 
 
+            # ✅ 상태 저장용 변수
+            agree = st.session_state.get("agree_clicked", False)
+            
+            # ✅ 총 이수율 영역 출력
             st.markdown(f"""
                 <div style="border-top:1px solid #ccc; margin-top:2rem; padding-top:1rem; font-weight:600; font-size:1.1rem; text-align:center;">
                     총 이수율<br>
                     <p style="font-size:0.9rem;">*사전워크숍과 컨퍼런스를 제외한 32차시만 합산됩니다.</p>
                     {completed_sessions:02d}차시 / 32차시
-                    <div style="margin-top: 1.2rem;">
-                        <form action="" method="post">
-                            <button type="submit" style="
-                                background-color: white;
-                                color: black;
-                                border: 1px solid #ccc;
-                                border-radius: 6px;
-                                padding: 0.5rem 1rem;
-                                font-size: 0.9rem;
-                                cursor: pointer;
-                             onclick="alert('test');">
-                                📄 이수 내역 확인 동의
-                            </button>
-                        </form>
-                    </div>
                 </div>
             """, unsafe_allow_html=True)
+            
+            # ✅ 버튼 표시
+            if st.button("📄 이수 내역 확인 동의"):
+                st.session_state.agree_clicked = True
+            
+            # ✅ 동의 후 내용 표시
+            if st.session_state.get("agree_clicked", False):
+                st.success("✅ 이수 내역 확인에 동의하셨습니다.")
+                # 필요한 추가 내용 표시
+                st.markdown("""
+                <div style="background-color:#f0f0f0; padding:1rem; border-radius:10px; margin-top:1rem;">
+                    📝 이수 내역이 여기에 표시됩니다. (예시 텍스트)
+                </div>
+                """, unsafe_allow_html=True)
 
 
 
