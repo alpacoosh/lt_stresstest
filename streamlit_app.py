@@ -75,13 +75,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown('<div class="title-box"><h1>📚 [2025 교실혁명 선도교사 양성연수]</h1><p>수강 정보 및 이수 현황 확인</p></div>', unsafe_allow_html=True)
+
+# ✅ 제목 박스 아래 로고 정렬
 st.markdown("""
-<div class="title-box">
-    <h1>📚 [2025 교실혁명 선도교사 양성연수]</h1>
-    <p>수강 정보 및 이수 현황 확인</p>
-    <img src="https://raw.githubusercontent.com/alpacoosh/lt_stresstest/main/logo.png" style="margin-top:1rem; max-width:300px;">
+<div style="text-align:center; margin-top:-1.5rem; margin-bottom:2rem;">
+    <img src="https://raw.githubusercontent.com/alpacoosh/lt_stresstest/main/logo.png" style="max-width:200px;">
 </div>
 """, unsafe_allow_html=True)
+
 
 
 # ✅ 사용자 입력
