@@ -244,7 +244,6 @@ if st.button("📥 이수율 조회하기"):
             user = row.iloc[0]
             st.success(f"✅ {user['이름']} 선생님의 이수 정보")
 
-            # ... 이수 테이블 등 출력 코드 ...
 
             # ✅ 동의 버튼 중앙 정렬로 보여주기
             st.markdown("<div style='text-align:center; margin-top:2rem;'>", unsafe_allow_html=True)
@@ -263,5 +262,6 @@ if st.button("📥 이수율 조회하기"):
                     elif confirmation == "아니오":
                         st.warning("⚠️ 이수 내역에 이의가 있습니다. 담당자에게 문의해주세요.")
             st.markdown("</div>", unsafe_allow_html=True)
+
 
             
