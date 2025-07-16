@@ -4,16 +4,6 @@ import pandas as pd
 from google.oauth2.service_account import Credentials
 from collections import defaultdict
 
-if "input_name" not in st.session_state:
-    st.session_state["input_name"] = ""
-
-if "input_phone" not in st.session_state:
-    st.session_state["input_phone"] = ""
-
-if "query_completed" not in st.session_state:
-    st.session_state["query_completed"] = False
-
-
 # ✅ 구글 시트 인증
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_info(
@@ -97,9 +87,8 @@ st.markdown("""
 
 
 # ✅ 사용자 입력
-st.text_input("👤 이름을 입력하세요: ", key="input_name", placeholder="예: 홍길동")
-st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, key="input_phone", placeholder="예: 1234")
-
+name = st.text_input("👤 이름을 입력하세요: ", placeholder="예: 홍길동")
+phone_last4 = st.text_input("📱 전화번호 뒷 네 자리를 입력하세요: ", max_chars=4, placeholder="예: 1234")
 
 # ✅ 수료 기준 안내
 st.markdown("""
@@ -185,30 +174,18 @@ def render_table(title, prefix, count):
     </div>
     """
 
-if "agree_clicked" not in st.session_state:
-    st.session_state["agree_clicked"] = False
-
-if "agree_final" not in st.session_state:
-    st.session_state["agree_final"] = None  # YES 또는 NO
-
-
-
 # ✅ 이수율 조회
 if st.button("📥 이수율 조회하기"):
-    if not st.session_state["input_name"] or not st.session_state["input_phone"]:
+    if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
-        row = data[
-            (data["이름"] == st.session_state["input_name"]) &
-            (data["전화번호뒷자리"] == st.session_state["input_phone"])
-        ]
+        row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
         if len(row) == 0:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
-            st.session_state["query_completed"] = False
         else:
-            st.session_state["user_data"] = row.iloc[0]
-            st.session_state["query_completed"] = True
-            st.stop()  # ✅ rerun 대신 stop → 사용자에게 안정적임
+            user = row.iloc[0]
+            st.success(f"✅ {user['이름']} 선생님의 이수 정보")
+
             summary_fields = [
                 ("사전진단", 88, 89, 90),
                 ("사전워크숍", 92, 93, 94),
@@ -269,31 +246,3 @@ if st.button("📥 이수율 조회하기"):
                     {completed_sessions:02d}차시 / 32차시
                 </div>
             """, unsafe_allow_html=True)
-            
-            # ✅ 동의 버튼 표시
-            if not st.session_state["agree_clicked"]:
-                st.button("🔒 이수 내역 확인 동의", key="agree_button")
-            
-                if st.session_state.get("agree_button"):
-                    st.session_state["agree_clicked"] = True
-                    st.experimental_rerun()
-            else:
-                st.markdown("""
-                    <div style="margin-top:1.5rem; padding:1rem; background-color:#e0f7fa; border-radius:8px; text-align:center;">
-                        <p style="font-size:1rem; font-weight:600; margin-bottom:1rem;">
-                            📄 이수 내역에 이의 없음을 확인합니다.
-                        </p>
-                    </div>
-                """, unsafe_allow_html=True)
-            
-                col_yes, col_no = st.columns(2)
-                with col_yes:
-                    if st.button("✅ YES"):
-                        st.session_state["agree_final"] = "yes"
-                        st.success("감사합니다. 이수 내역이 확정되었습니다.")
-                with col_no:
-                    if st.button("❌ NO"):
-                        st.session_state["agree_final"] = "no"
-                        st.warning("이수 내역에 이의가 있음을 선택하셨습니다.")
-
-           
