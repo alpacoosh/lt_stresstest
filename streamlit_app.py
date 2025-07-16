@@ -258,8 +258,20 @@ if user is not None:
 
         if st.session_state["confirm_status"] == "YES":
             st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
+            # 구글 시트에 TRUE 기록
+            signature_col_idx = data.columns.get_loc("서명") + 1
+            row_idx = user.name + 3  # df_raw 기준 실제 시트 row (헤더2줄+1부터 시작)
+            ws = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
+            ws.update_cell(row_idx, signature_col_idx, "TRUE")
+        
         elif st.session_state["confirm_status"] == "NO":
             st.warning("동의하지 않으셨습니다. 문의사항은 운영팀에 연락해주세요.")
+            # 구글 시트에 FALSE 기록
+            signature_col_idx = data.columns.get_loc("서명") + 1
+            row_idx = user.name + 3
+            ws = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
+            ws.update_cell(row_idx, signature_col_idx, "FALSE")
+
     
     
     
