@@ -236,13 +236,12 @@ if user is not None:
         </div>
     """, unsafe_allow_html=True)
 
-    # 🔥 여기를 form 구조로 바꿔주면 됨
     if not st.session_state["agree_clicked"]:
         with st.form("agree_form", clear_on_submit=False):
             submitted = st.form_submit_button("이수 내역 확인 동의")
             if submitted:
                 st.session_state["agree_clicked"] = True
-                st.experimental_rerun()
+                # st.experimental_rerun() 필요 없음
     else:
         st.info("이수 내역에 이의 없음을 확인합니다.")
         col_yes, col_no = st.columns([1, 1])
@@ -252,8 +251,9 @@ if user is not None:
         with col_no:
             if st.button("NO", key="no_btn"):
                 st.session_state["confirm_status"] = "NO"
-
+    
         if st.session_state["confirm_status"] == "YES":
             st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
         elif st.session_state["confirm_status"] == "NO":
             st.warning("동의하지 않으셨습니다. 문의사항은 운영팀에 연락해주세요.")
+
