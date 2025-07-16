@@ -239,39 +239,41 @@ if user is not None:
         </div>
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    if not st.session_state["agree_clicked"]:
-        c1, c2, c3 = st.columns([4.6, 3, 4.4])
-        with c2:
-            if st.button("이수 내역 확인 동의", key="agree_btn"):
-                st.session_state["agree_clicked"] = True
-    
-    if st.session_state["agree_clicked"]:
-        st.info("이수 내역에 이의 없음을 확인합니다.")
-        # YES/NO 오른쪽 끝에만 배치
-        r1, r2, r3 = st.columns([8, 1, 1])
-        with r2:
-            if st.button("YES", key="yes_btn"):
-                st.session_state["confirm_status"] = "YES"
-        with r3:
-            if st.button("NO", key="no_btn"):
-                st.session_state["confirm_status"] = "NO"
+    # ✅ 서명 값이 TRUE면 동의 관련 UI 숨김
+    if user.get("서명", "").strip().upper() == "TRUE":
+        st.info("이미 이수 내역 확인 동의를 완료하셨습니다.")
+    else:
+        if not st.session_state["agree_clicked"]:
+            c1, c2, c3 = st.columns([4.6, 3, 4.4])
+            with c2:
+                if st.button("이수 내역 확인 동의", key="agree_btn"):
+                    st.session_state["agree_clicked"] = True
 
-        if st.session_state["confirm_status"] == "YES":
-            st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
-            # 구글 시트에 TRUE 기록
-            signature_col_idx = data.columns.get_loc("서명") + 1
-            row_idx = user.name + 3  # df_raw 기준 실제 시트 row (헤더2줄+1부터 시작)
-            ws = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
-            ws.update_cell(row_idx, signature_col_idx, "TRUE")
-        
-        elif st.session_state["confirm_status"] == "NO":
-            st.warning("동의하지 않으셨습니다. 문의사항은 운영팀에 연락해주세요.")
-            # 구글 시트에 FALSE 기록
-            signature_col_idx = data.columns.get_loc("서명") + 1
-            row_idx = user.name + 3
-            ws = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
-            ws.update_cell(row_idx, signature_col_idx, "FALSE")
+        if st.session_state["agree_clicked"]:
+            st.info("이수 내역에 이의 없음을 확인합니다.")
+            r1, r2, r3 = st.columns([8, 1, 1])
+            with r2:
+                if st.button("YES", key="yes_btn"):
+                    st.session_state["confirm_status"] = "YES"
+            with r3:
+                if st.button("NO", key="no_btn"):
+                    st.session_state["confirm_status"] = "NO"
 
+            if st.session_state["confirm_status"] == "YES":
+                st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
+                # 구글 시트에 TRUE 기록
+                signature_col_idx = data.columns.get_loc("서명") + 1
+                row_idx = user.name + 3  # df_raw 기준 실제 시트 row (헤더2줄+1부터 시작)
+                ws = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
+                ws.update_cell(row_idx, signature_col_idx, "TRUE")
+            
+            elif st.session_state["confirm_status"] == "NO":
+                st.warning("동의하지 않으셨습니다. 문의사항은 운영팀에 연락해주세요.")
+                # 구글 시트에 FALSE 기록
+                signature_col_idx = data.columns.get_loc("서명") + 1
+                row_idx = user.name + 3
+                ws = client.open_by_key("1Q1RbrQJ4mipUzogBpfN6dY6TOOLxrYZPkRpvlANUAo8").worksheet("시트4")
+                ws.update_cell(row_idx, signature_col_idx, "FALSE")
     
     
     
