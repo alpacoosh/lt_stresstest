@@ -247,13 +247,14 @@ if st.button("📥 이수율 조회하기"):
                 </div>
             """, unsafe_allow_html=True)
             
-            # ✅ 이수 내역 확인 동의 여부 버튼
+            # ✅ 동의 버튼 및 확인 문구 처리
             if "agree_clicked" not in st.session_state:
                 st.session_state["agree_clicked"] = False
-            
-            if st.button("이수 내역 확인 동의"):
-                st.session_state["agree_clicked"] = True
-            
+
+            if not st.session_state["agree_clicked"]:
+                if st.button("이수 내역 확인 동의"):
+                    st.session_state["agree_clicked"] = True
+
             if st.session_state["agree_clicked"]:
                 st.markdown("""
                     <div style="margin-top:2rem; padding:1rem; background-color:#f1f1f1; border-radius:8px; text-align:center;">
@@ -264,5 +265,6 @@ if st.button("📥 이수율 조회하기"):
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
-
+            
+    
 
