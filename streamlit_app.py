@@ -90,15 +90,15 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 🟢 세션 상태값 초기화
-if "info_showed" not in st.session_state:
-    st.session_state["info_showed"] = False
+# 세션 상태 초기화
+if "user" not in st.session_state:
+    st.session_state["user"] = None
 if "agree_clicked" not in st.session_state:
     st.session_state["agree_clicked"] = False
 if "confirm_status" not in st.session_state:
-    st.session_state["confirm_status"] = None  # "YES", "NO", None
+    st.session_state["confirm_status"] = None
 
-def render_table(title, prefix, count):
+def render_table(title, prefix, count, user):
     if prefix == "원격연수":
         font_size = "0.55rem"
     else:
@@ -163,26 +163,25 @@ def render_table(title, prefix, count):
     </div>
     """
 
-# 🟢 버튼/동의 확인 분기 로직
+# 조회 버튼
 if st.button("📥 이수율 조회하기"):
     if not name or not phone_last4:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
-        st.session_state["info_showed"] = False
+        st.session_state["user"] = None
     else:
         row = data[(data["이름"] == name) & (data["전화번호뒷자리"] == phone_last4)]
         if len(row) == 0:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
-            st.session_state["info_showed"] = False
+            st.session_state["user"] = None
         else:
-            user = row.iloc[0]
-            st.success(f"✅ {user['이름']} 선생님의 이수 정보")
-            st.session_state["info_showed"] = True
+            st.session_state["user"] = row.iloc[0]
             st.session_state["agree_clicked"] = False
-            st.session_state["confirm_status"] = None  # YES/NO 선택 리셋
+            st.session_state["confirm_status"] = None
 
-# 🟢 정보가 조회된 경우에만 출력
-if st.session_state.get("info_showed"):
-    # ---- 이수 정보 출력 ----
+user = st.session_state.get("user")
+
+if user is not None:
+    st.success(f"✅ {user['이름']} 선생님의 이수 정보")
     summary_fields = [
         ("사전진단", 88, 89, 90),
         ("사전워크숍", 92, 93, 94),
@@ -219,12 +218,12 @@ if st.session_state.get("info_showed"):
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2), unsafe_allow_html=True)
+        st.markdown(render_table("① 사전진단 (2차시 / 100분)", "사전진단", 2, user), unsafe_allow_html=True)
     with col2:
-        st.markdown(render_table("② 사전워크숍 (3차시 / 150분) - KERIS 확인", "사전워크숍", 3), unsafe_allow_html=True)
-    st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16), unsafe_allow_html=True)
-    st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14), unsafe_allow_html=True)
-    st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분) - KERIS 확인", "컨퍼런스", 5), unsafe_allow_html=True)
+        st.markdown(render_table("② 사전워크숍 (3차시 / 150분) - KERIS 확인", "사전워크숍", 3, user), unsafe_allow_html=True)
+    st.markdown(render_table("③ 원격연수 (16차시 / 800분)", "원격연수", 16, user), unsafe_allow_html=True)
+    st.markdown(render_table("④ 집합연수 (14차시 / 700분)", "집합연수", 14, user), unsafe_allow_html=True)
+    st.markdown(render_table("⑤ 컨퍼런스 (5차시 / 250분) - KERIS 확인", "컨퍼런스", 5, user), unsafe_allow_html=True)
 
     completed_sessions = int(user.get('총이수차시', 0))
     percent = round(completed_sessions / 40 * 100)
@@ -237,8 +236,8 @@ if st.session_state.get("info_showed"):
         </div>
     """, unsafe_allow_html=True)
 
-    # 🟢 동의 버튼, YES/NO 버튼 노출 (분기 처리)
-    if not st.session_state.get("agree_clicked"):
+    # 동의버튼 분기
+    if not st.session_state["agree_clicked"]:
         if st.button("이수 내역 확인 동의"):
             st.session_state["agree_clicked"] = True
     else:
@@ -251,7 +250,6 @@ if st.session_state.get("info_showed"):
             if st.button("NO"):
                 st.session_state["confirm_status"] = "NO"
 
-        # YES/NO 클릭 시 안내 메시지만 하단에 표시
         if st.session_state["confirm_status"] == "YES":
             st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
         elif st.session_state["confirm_status"] == "NO":
