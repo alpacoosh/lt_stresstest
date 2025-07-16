@@ -163,7 +163,7 @@ def render_table(title, prefix, count, user):
     </div>
     """
 
-st.write("컬럼 종류:", list(data.columns))
+# st.write("컬럼 종류:", list(data.columns))
 
 
 # 조회 버튼
@@ -240,7 +240,7 @@ if user is not None:
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-    st.write("서명 실제 값:", repr(user.get("서명", "")))
+    # st.write("서명 실제 값:", repr(user.get("서명", "")))
 
     # ✅ 서명 값이 TRUE면 동의 관련 UI 숨김
     if user.get("서명", "").strip().upper() == "TRUE":
