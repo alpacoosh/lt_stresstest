@@ -247,22 +247,22 @@ if st.button("📥 이수율 조회하기"):
                 </div>
             """, unsafe_allow_html=True)
             
-            from streamlit_modal import Modal
-            import streamlit as st
-            
-            modal = Modal("확인창", key="check_modal")
+            # ✅ 이수 내역 확인 동의 여부 버튼
+            if "agree_clicked" not in st.session_state:
+                st.session_state["agree_clicked"] = False
             
             if st.button("이수 내역 확인 동의"):
-                modal.open()
+                st.session_state["agree_clicked"] = True
             
-            if modal.is_open():
-                with modal.container():
-                    st.markdown("### 이수 내역을 확인하시겠습니까?")
-                    if st.button("✅ 예"):
-                        st.success("이수 내역 확인 동의 완료!")
-                        modal.close()
-                    if st.button("❌ 아니요"):
-                        modal.close()
-
+            if st.session_state["agree_clicked"]:
+                st.markdown("""
+                    <div style="margin-top:2rem; padding:1rem; background-color:#f1f1f1; border-radius:8px; text-align:center;">
+                        <p style="font-weight:600; font-size:1rem;">📝 이수내역에 이의 없음을 확인합니다.</p>
+                        <div style="margin-top:1rem;">
+                            <button style="padding:6px 14px; font-size:0.9rem; margin-right:10px;">✅ 예</button>
+                            <button style="padding:6px 14px; font-size:0.9rem;">❌ 아니요</button>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
 
 
