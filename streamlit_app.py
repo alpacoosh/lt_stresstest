@@ -235,7 +235,7 @@ if user is not None:
             {completed_sessions:02d}차시 / 32차시
         </div>
     """, unsafe_allow_html=True)
-
+    st.markdown("<br>", unsafe_allow_html=True)
     if not st.session_state["agree_clicked"]:
         c1, c2, c3 = st.columns([4.6, 3, 4.4])
         with c2:
@@ -252,7 +252,7 @@ if user is not None:
         with r3:
             if st.button("NO", key="no_btn"):
                 st.session_state["confirm_status"] = "NO"
-        # ✅ 여기 아래에는 절대 st.button("YES")/st.button("NO") 쓰지 마!
+
         if st.session_state["confirm_status"] == "YES":
             st.success("동의가 정상적으로 접수되었습니다. 감사합니다.")
         elif st.session_state["confirm_status"] == "NO":
