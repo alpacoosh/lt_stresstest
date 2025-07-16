@@ -198,19 +198,17 @@ if st.button("📥 이수율 조회하기"):
     if not st.session_state["input_name"] or not st.session_state["input_phone"]:
         st.warning("⚠️ 이름과 전화번호 뒷자리를 모두 입력해주세요.")
     else:
-        row = data[(data["이름"] == st.session_state["input_name"]) & 
-                   (data["전화번호뒷자리"] == st.session_state["input_phone"])]
+        row = data[
+            (data["이름"] == st.session_state["input_name"]) &
+            (data["전화번호뒷자리"] == st.session_state["input_phone"])
+        ]
         if len(row) == 0:
             st.error("😢 입력하신 정보와 일치하는 사용자가 없습니다.")
             st.session_state["query_completed"] = False
         else:
             st.session_state["user_data"] = row.iloc[0]
             st.session_state["query_completed"] = True
-            st.experimental_rerun()
-            st.success(f"✅ {user['이름']} 선생님의 이수 정보")
-            # ✅ 조회 성공 후 화면
-            if st.session_state["query_completed"]:
-                user = st.session_state["user_data"]
+            st.stop()  # ✅ rerun 대신 stop → 사용자에게 안정적임
             summary_fields = [
                 ("사전진단", 88, 89, 90),
                 ("사전워크숍", 92, 93, 94),
