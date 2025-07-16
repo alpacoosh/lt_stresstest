@@ -247,19 +247,22 @@ if st.button("📥 이수율 조회하기"):
                 </div>
             """, unsafe_allow_html=True)
             
-            # ✅ 버튼 표시
-            if st.button("📄 이수 내역 확인 동의"):
-                st.session_state.agree_clicked = True
+            from streamlit_modal import Modal
+            import streamlit as st
             
-            # ✅ 동의 후 내용 표시
-            if st.session_state.get("agree_clicked", False):
-                st.success("✅ 이수 내역 확인에 동의하셨습니다.")
-                # 필요한 추가 내용 표시
-                st.markdown("""
-                <div style="background-color:#f0f0f0; padding:1rem; border-radius:10px; margin-top:1rem;">
-                    📝 이수 내역이 여기에 표시됩니다. (예시 텍스트)
-                </div>
-                """, unsafe_allow_html=True)
+            modal = Modal("확인창", key="check_modal")
+            
+            if st.button("이수 내역 확인 동의"):
+                modal.open()
+            
+            if modal.is_open():
+                with modal.container():
+                    st.markdown("### 이수 내역을 확인하시겠습니까?")
+                    if st.button("✅ 예"):
+                        st.success("이수 내역 확인 동의 완료!")
+                        modal.close()
+                    if st.button("❌ 아니요"):
+                        modal.close()
 
 
 
